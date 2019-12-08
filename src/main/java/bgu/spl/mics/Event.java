@@ -1,5 +1,5 @@
 package bgu.spl.mics;
-// chai fack me 2 magic dicks live in a ley!
+// Kill me
 /**
  * A "Marker" interface extending {@link Message}. A Publisher that sends an
  * Event message expects to receive a result of type {@code <T>} when a
