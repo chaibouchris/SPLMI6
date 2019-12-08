@@ -1,5 +1,5 @@
 package bgu.spl.mics;
-//magic stick23
+//fuck you
 /**
  * A "Marker" interface extending {@link Message}. A Publisher that sends an
  * Event message expects to receive a result of type {@code <T>} when a
