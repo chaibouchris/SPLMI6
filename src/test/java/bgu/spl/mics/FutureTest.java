@@ -1,154 +1,56 @@
 package bgu.spl.mics;
 
+import main.java.bgu.spl.mics.Future;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class FutureTest {
-    private Future<Integer> future;
+    Future<Integer> future;
+    Future<String> futureS;
 
     @BeforeEach
     public void setUp() {
-        this.future = new Future<Integer>():
+        future = new Future<>();
+        futureS = new Future<>();
     }
 
     @Test
-    /*
-    Tests that trying to fetch the result after resolving returns immediately (using indefinitely blocking get)
-     */
-    public void simpleResolveGet() {
-        assertFalse(future.isDone(), "Done before resolved");
-        future.resolve(5);
-        long start = System.currentTimeMillis();
-        Integer result = future.get();
-        long end = System.currentTimeMillis();
-        long duration = end - start;
+    public void get() {
+        assertNull(future.get());
+        assertNull(futureS.get());
 
-        // Should be immediate, however we still need to accommodate for the margin of error
-        assertTrue(0 <= duration && duration <= 1, "Waited before returning the result");
-        assertEquals(5, result, "Different result after resolve");
-        assertTrue(future.isDone(), "Not done after resolve");
+        future.resolve(6);
+        assertEquals(new Integer(6), future.get());
+
+        futureS.resolve("Game Of Thrones");
+        assertEquals("Game Of Thrones", futureS.get());
     }
 
     @Test
-    /*
-    Tests that trying to fetch the result after resolving returns immediately (using the timed get)
-     */
-    public void immediateTimedResolveGet() {
-        assertFalse(future.isDone(), "Done before resolved");
-
-        future.resolve(5);
-        long start = System.currentTimeMillis();
-        Integer result = future.get(50, TimeUnit.MILLISECONDS);
-        long end = System.currentTimeMillis();
-        long duration = end - start;
-
-        // error margin of 1ms
-        assertTrue(0 <= duration && duration <= 1, "Waited before returning the result");
-        assertEquals(5, result, "Different result after resolve");
-        assertTrue(future.isDone(), "Not done after resolve");
+    public void resolve() {
+        future.resolve(893);
+        assertEquals(new Integer(893), future.get());
     }
 
     @Test
-    /*
-    Tests that trying to fetch the result blocks the calling thread until future is resolved (using indefinitely blocking get)
-     */
-    public void blockingGet() {
-        assertFalse(future.isDone(), "Done before resolved");
-        Thread resolver = new Thread(() -> {
-            try {
-                Thread.sleep(20);
-                future.resolve(7);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        resolver.start();
-
-        long start = System.currentTimeMillis();
-        Integer result = future.get();
-        long end = System.currentTimeMillis();
-        long duration = end - start;
-
-        // error margin of 2ms
-        assertTrue(20 <= duration && duration <= 22, "Waited too long or too little to get the result");
-        assertEquals(7, result, "Different result after resolve");
-        assertTrue(future.isDone(), "Not done after resolve");
-        try {
-            resolver.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void isDone() {
+        assertFalse(future.isDone());
+        future.resolve(999);
+        assertTrue(future.isDone());
     }
 
     @Test
-    /*
-    Tests that trying to fetch the result blocks the calling thread until future is resolved (using the timed get)
-    (and that it stops waiting for the result even before the timeout expired if the result is available)
-     */
-    public void timedGet_notWaitingTilTimoutWhenResolved() {
-        assertFalse(future.isDone(), "Done before resolved");
-        Thread resolver = new Thread(() -> {
-            try {
-                Thread.sleep(20);
-                future.resolve(7);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        resolver.start();
+    public void get1() {
+        TimeUnit time = TimeUnit.MILLISECONDS;
+        Object o = null;
+        o = future.get(666, time);
+        assertNull(o);
 
-        long start = System.currentTimeMillis();
-        Integer result = future.get(50, TimeUnit.MILLISECONDS);
-        long end = System.currentTimeMillis();
-        long duration = end - start;
-
-        assertEquals(7, result, "Different result after resolve");
-        // error margin of 2ms
-        assertTrue(20 <= duration && duration <= 22, "Waited too long or too little to get the result");
-        assertTrue(future.isDone(), "Not done after resolve");
-        try {
-            resolver.interrupt();
-            resolver.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    /*
-    Tests that trying to fetch the result times out if the future isn't resolved in time
-     */
-    public void timedGet_timeout() {
-        assertFalse(future.isDone(), "Done before resolved");
-        Thread resolver = new Thread(() -> {
-            try {
-                Thread.sleep(50);
-                future.resolve(7);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        resolver.start();
-
-        long start = System.currentTimeMillis();
-        Integer result = future.get(30, TimeUnit.MILLISECONDS);
-        long end = System.currentTimeMillis();
-        long duration = end - start;
-
-        assertNull(result, "Got some result despite timeout");
-        // error margin of 2ms
-        assertTrue(30 <= duration && duration <= 32, "Blocked for longer than neeeded");
-        assertFalse(future.isDone(), "Done despite timeout");
-
-        try {
-            resolver.interrupt();
-            resolver.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        future.resolve(new Integer(5));
+        assertEquals(new Integer(5), future.get(893, time));
     }
 }
-
