@@ -2,16 +2,66 @@ package bgu.spl.mics;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FutureTest {
+    private Future<String> bejerano;
+    private Future<String> bejerano2;
+    private Future<String> bejerano3;
+    private Future<String> bejerano4;
+    private Future<String> bejerano5;
+    private Future<String> bejerano6;
     @BeforeEach
     public void setUp(){
+        bejerano = new Future<>();
+        bejerano2 = new Future<>();
+        bejerano3 = new Future<>();
+        bejerano4 = new Future<>();
+        bejerano5 = new Future<>();
+        bejerano6 = new Future<>();
     }
 
     @Test
-    public void test(){
+    public void testIsDone(){
+        assertFalse(bejerano.isDone());
+        bejerano.resolve("Im professional");
+        assertTrue(bejerano.isDone());
+
         //TODO: change this test and add more tests :)
         fail("Not a good test");
+    }
+
+    public void testResolve(){
+        assertFalse(bejerano2.isDone());
+        bejerano2.resolve("why not try?");
+        assertEquals("why not try?",bejerano2.get(),"resolve is stupid");
+        assertTrue(bejerano2.isDone());
+    }
+
+    public void testTimeGet(){
+        Thread get = new Thread(()->{
+           assertEquals("bigbigbig",bejerano3.get(10, TimeUnit.SECONDS),"resolve to slow");
+           assertNull( bejerano4.get(10 ,TimeUnit.SECONDS),"didnt wait to get");
+
+
+        });
+        Thread resolve = new Thread(()->{
+          bejerano3.resolve("bigbigbig");
+            try {
+                get.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            bejerano4.resolve("brazil");
+        });
+
+        get.start();
+        resolve.start();
+
+
+
     }
 }
