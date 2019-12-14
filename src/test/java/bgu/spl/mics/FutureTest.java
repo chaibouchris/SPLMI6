@@ -41,7 +41,7 @@ public class FutureTest {
         assertTrue(bejerano2.isDone());
     }
 
-    public void testTimeGet(){
+    public void testTimeGet() throws InterruptedException {
         Thread get = new Thread(()->{
            assertEquals("bigbigbig",bejerano3.get(10, TimeUnit.SECONDS),"resolve to slow");
            assertNull( bejerano4.get(10 ,TimeUnit.SECONDS),"didnt wait to get");
@@ -57,11 +57,16 @@ public class FutureTest {
             }
             bejerano4.resolve("brazil");
         });
+        Thread END = new Thread(()->{
+           assertTrue(bejerano3.isDone(),"resolve bejerano3 aint working");
+            assertTrue(bejerano4.isDone(),"resolve bejerano4 anit workin");
+            assertEquals("brazil",bejerano4.get(),"resolve suck");
+        });
 
         get.start();
         resolve.start();
-
-
+        resolve.join();
+        END.start();
 
     }
 }
