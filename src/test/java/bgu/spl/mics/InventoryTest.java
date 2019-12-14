@@ -1,40 +1,59 @@
-//package bgu.spl.mics;
-package test.java.bgu.spl.mics;
+package bgu.spl.mics;
+
+import bgu.spl.mics.application.MI6Runner;
+import bgu.spl.mics.application.passiveObjects.Inventory;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import main.java.bgu.spl.mics.application.passiveObjects.Inventory;
+
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
-import java.io.File;
+
 public class InventoryTest {
-    Inventory ronen;
+
+    private Inventory Invi;
+    private String[] Gadgets = {"SatSolver","Pizza","Burekas","Tinder","Lupital"};
+
     @BeforeEach
     public void setUp(){
-    ronen = new Inventory();
+        try {
+            Invi = Inventory.getInstance();
+            Invi.load(Gadgets);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Test
-    public void test(){
-        //TODO: change this test and add more tests :)
-        fail("Not a good test");
+    public void GetItemsTest(){
+        assertTrue(Invi.getItem("SatSolver"));
+        assertFalse(Invi.getItem("SatSolver"));
+        assertFalse(Invi.getItem("Black Zucchini"));
     }
-    public void testGetItem(){
-        String [] items =  {"gun", "hammer" ,"formulas"};
-        ronen.load(items);
-        for (String i:items) {
-            assertTrue(ronen.getItem(i));
-            assertFalse(ronen.getItem(i));
-        }
-    }
-    public void testPrintToFile(){
-        String toPrint = "printTHIStoJson";
-        String filePathString = "*.file name.json";
-        inv1.printToFile(str);
-        File f = new File(filePathString);
-        boolean isExist = false;
-        if(f.exists() && !f.isDirectory()) {
-            isExist = true;
-        }
-        assertTrue(isExist);
 
+    @Test
+    public void PrintToFileTest() {
+        try {
+            Invi.printToFile("inventoryOutputFile.json");
+            JsonObject read = MI6Runner.Read("inventoryOutputFile.json");
+            JsonArray Harry = read.getAsJsonArray("inventory");
+            List<String> invi = new ArrayList<>();
+            for (int i = 0; i < Harry.size(); i++) {
+                invi.add(Harry.get(i).toString());
+            }
+            assertEquals(5,Harry.size());
+            while (!invi.isEmpty()){
+                assertTrue(Invi.getItem(invi.get(0)));
+                invi.remove(0);
+            }
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
