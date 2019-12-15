@@ -16,7 +16,6 @@ public class Squad {
 	 * Retrieves the single instance of this class.
 	 */
 	public static Squad getInstance() {
-		//TODO: Implement this
 		return null;
 	}
 
@@ -27,14 +26,20 @@ public class Squad {
 	 * 						of the squad.
 	 */
 	public void load (Agent[] agents) {
-		// TODO Implement this
+		for (Agent x: agents) {
+			this.agents.put(x.getSerialNumber(),x)
+		}
 	}
 
 	/**
 	 * Releases agents.
 	 */
 	public void releaseAgents(List<String> serials){
-		// TODO Implement this
+		for (String x:serials) {
+			if(this.agents.containsKey(x)){
+				agents.get(x).release();
+			}
+		}
 	}
 
 	/**
@@ -50,9 +55,30 @@ public class Squad {
 	 * @param serials   the serial numbers of the agents
 	 * @return ‘false’ if an agent of serialNumber ‘serial’ is missing, and ‘true’ otherwise
 	 */
-	public boolean getAgents(List<String> serials){
-		// TODO Implement this
-		return false;
+	public synchronized boolean getAgents(List<String> serials){
+		boolean everybodyHere = true;// if some one is missing then i want to acqurie everbody else and return true.
+		for (String x: serials) {
+			if (this.agents.containsKey(x)) {
+				if (this.agents.get(x).isAvailable()) {
+					this.agents.get(x).acquire();
+				}
+				else {
+				while (!this.agents.get(x).isAvailable()) {
+					try {
+						wait();// wait until agent is available
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
+				}
+				this.agents.get(x).acquire();
+			}
+		}
+			else { // agent not in sqad
+				everybodyHere = false;
+			}
+
+		}
+		return everybodyHere;
 	}
 
     /**
@@ -61,6 +87,7 @@ public class Squad {
      * @return a list of the names of the agents with the specified serials.
      */
     public List<String> getAgentsNames(List<String> serials){
+
         // TODO Implement this
 	    return null;
     }

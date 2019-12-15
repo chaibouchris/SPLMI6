@@ -56,13 +56,17 @@ public class Agent {
 	 * Acquires an agent.
 	 */
 	public void acquire(){
-		// TODO Implement this
+		if(isAvailable()){
+			isAvailable = false;
+		}
 	}
 
 	/**
 	 * Releases an agent.
 	 */
 	public void release(){
-		// TODO Implement this
+		if(!isAvailable()){
+			isAvailable = true;
+		}
 	}
 }
