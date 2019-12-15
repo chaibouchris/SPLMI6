@@ -12,16 +12,14 @@ public class FutureTest {
     private Future<String> bejerano2;
     private Future<String> bejerano3;
     private Future<String> bejerano4;
-    private Future<String> bejerano5;
-    private Future<String> bejerano6;
+
     @BeforeEach
     public void setUp(){
         bejerano = new Future<>();
         bejerano2 = new Future<>();
         bejerano3 = new Future<>();
         bejerano4 = new Future<>();
-        bejerano5 = new Future<>();
-        bejerano6 = new Future<>();
+
     }
 
     @Test
