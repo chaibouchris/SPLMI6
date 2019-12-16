@@ -72,7 +72,7 @@ public class Future<T> {
 		}
 		else{
 			long time = unit.toMillis(timeout);
-			while (!done){
+			while(!done){
 				try {
 					wait(time);
 					if(!done){
@@ -85,5 +85,4 @@ public class Future<T> {
 			return result;
 		}
 	}
-
 }

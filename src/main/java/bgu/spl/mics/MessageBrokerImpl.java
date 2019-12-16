@@ -1,6 +1,5 @@
 package bgu.spl.mics;
 
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -11,15 +10,17 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Only private fields and methods can be added to this class.
  */
 public class MessageBrokerImpl implements MessageBroker {
-	private ConcurrentHashMap<Event, Future> eventFutureMap;
-	private ConcurrentHashMap<Subscriber, BlockingQueue<Message>> subscriberRegisterMap;
-	private ConcurrentHashMap<Class<? extends Message>, ConcurrentLinkedQueue<Subscriber>> MessageSupPubMap;
+
+	private ConcurrentHashMap<Event, Future> eventFutureMap = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<Subscriber, BlockingQueue<Message>> subscriberRegisterMap = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<Class<? extends Message>, ConcurrentLinkedQueue<Subscriber>> MessageSupPubMap = new ConcurrentHashMap<>();
 
 	/**
 	 * Retrieves the single instance of this class.
 	 */
+
 	public static MessageBroker getInstance() {
-		//TODO: Implement this
+		if (messageBroker)
 		return null;
 	}
 
