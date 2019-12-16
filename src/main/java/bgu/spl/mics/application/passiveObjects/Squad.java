@@ -27,7 +27,7 @@ public class Squad {
 	 */
 	public void load (Agent[] agents) {
 		for (Agent x: agents) {
-			this.agents.put(x.getSerialNumber(),x)
+			this.agents.put(x.getSerialNumber(),x);
 		}
 	}
 
@@ -87,8 +87,7 @@ public class Squad {
      * @return a list of the names of the agents with the specified serials.
      */
     public List<String> getAgentsNames(List<String> serials){
-
-        // TODO Implement this
+    	List<String> agentsNames;
 	    return null;
     }
 
