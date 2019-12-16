@@ -14,10 +14,17 @@ public class Diary {
 	/**
 	 * Retrieves the single instance of this class.
 	 */
-	public static Diary getInstance() {
-		//TODO: Implement this
-		return null;
+
+	private Diary(){
 	}
+
+	private static class DiaryHolder {
+		private static Diary instance = new Diary();
+	}
+	public static Diary getInstance() {
+		return Diary.DiaryHolder.instance;
+	}
+
 
 	public List<Report> getReports() {
 		return null;

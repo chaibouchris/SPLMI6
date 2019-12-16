@@ -15,10 +15,17 @@ public class Inventory {
 	/**
      * Retrieves the single instance of this class.
      */
-	public static Inventory getInstance() {
-		//TODO: Implement this
-		return null;
+
+	private Inventory(){
 	}
+
+	private static class InventoryHolder {
+		private static Inventory instance = new Inventory();
+	}
+	public static Inventory getInstance() {
+		return Inventory.InventoryHolder.instance;
+	}
+
 
 	/**
      * Initializes the inventory. This method adds all the items given to the gadget

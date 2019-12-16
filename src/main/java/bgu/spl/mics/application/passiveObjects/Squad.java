@@ -1,4 +1,7 @@
 package bgu.spl.mics.application.passiveObjects;
+import bgu.spl.mics.MessageBroker;
+import bgu.spl.mics.MessageBrokerImpl;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,9 +18,17 @@ public class Squad {
 	/**
 	 * Retrieves the single instance of this class.
 	 */
-	public static Squad getInstance() {
-		return null;
+
+	private Squad(){
 	}
+
+	private static class SquadHolder {
+		private static Squad instance = new Squad();
+	}
+	public static Squad getInstance() {
+		return Squad.SquadHolder.instance;
+	}
+
 
 	/**
 	 * Initializes the squad. This method adds all the agents to the squad.
