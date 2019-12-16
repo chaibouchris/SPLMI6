@@ -11,12 +11,14 @@ import java.util.concurrent.TimeUnit;
  * No public constructor is allowed except for the empty constructor.
  */
 public class Future<T> {
-	private boolean done = false;
+	private boolean done;
 	private T result;
 	/**
 	 * This should be the the only public constructor in this class.
 	 */
 	public Future() {
+		done = false;
+		result = null;
 	}
 	
 	/**
@@ -67,15 +69,15 @@ public class Future<T> {
      *         elapsed, return null.
      */
 	public T get(long timeout, TimeUnit unit) {
-		if(done){
+		if (done){
 			return result;
 		}
-		else{
+		else {
 			long time = unit.toMillis(timeout);
-			while(!done){
+			while (!done){
 				try {
 					wait(time);
-					if(!done){
+					if (!done){
 						return null;
 					}
 				} catch (InterruptedException e) {

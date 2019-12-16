@@ -87,8 +87,12 @@ public class Squad {
      * @return a list of the names of the agents with the specified serials.
      */
     public List<String> getAgentsNames(List<String> serials){
-    	List<String> agentsNames;
-	    return null;
+    	List<String> agentsNames = null;
+    	for(String serialNums:serials) {
+			String name = agents.get(serialNums).getName();
+			agentsNames.add(name);
+		}
+	    return agentsNames;
     }
 
 }
