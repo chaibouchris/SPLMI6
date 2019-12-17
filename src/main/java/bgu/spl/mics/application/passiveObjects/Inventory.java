@@ -35,7 +35,9 @@ public class Inventory {
      * 						of the inventory.
      */
 	public void load (String[] inventory) {
-		//TODO: Implement this
+		for (String x:inventory) {// just a for each loop to add all the beautiful gadgets to the Q list.
+			gadgets.add(x);
+		}
 	}
 	
 	/**
@@ -44,9 +46,14 @@ public class Inventory {
      * @param gadget 		Name of the gadget to check if available
      * @return 	‘false’ if the gadget is missing, and ‘true’ otherwise
      */
-	public boolean getItem(String gadget){
-		//TODO: Implement this
-		return true;
+	public synchronized boolean getItem(String gadget){// synchronized cause i dont want to missions to acquire the same gadget at the same time.
+		if(this.gadgets.contains(gadget)){
+			this.gadgets.remove(gadget);
+			return true;
+		}else{
+			return false;
+		}
+
 	}
 
 	/**
