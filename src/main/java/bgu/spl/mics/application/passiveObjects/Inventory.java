@@ -50,10 +50,8 @@ public class Inventory {
 		if(this.gadgets.contains(gadget)){
 			this.gadgets.remove(gadget);
 			return true;
-		}else{
-			return false;
 		}
-
+		else return false;
 	}
 
 	/**

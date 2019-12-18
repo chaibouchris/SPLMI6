@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.subscribers;
 
 import bgu.spl.mics.Subscriber;
+import bgu.spl.mics.application.passiveObjects.Inventory;
 
 /**
  * Q is the only Subscriber\Publisher that has access to the {@link bgu.spl.mics.application.passiveObjects.Inventory}.
@@ -10,9 +11,20 @@ import bgu.spl.mics.Subscriber;
  */
 public class Q extends Subscriber {
 
+	private Inventory invi;
+
+
+	private static class QHolder {
+		private static Q instance = new Q();
+	}
+	public static Q getInstance() {
+		return Q.QHolder.instance;
+	}
+
+
 	public Q() {
-		super("Change_This_Name");
-		// TODO Implement this
+		super("Q");
+		invi = Inventory.getInstance();
 	}
 
 	@Override
