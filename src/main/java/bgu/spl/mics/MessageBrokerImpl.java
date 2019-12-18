@@ -36,8 +36,6 @@ public class MessageBrokerImpl implements MessageBroker {
 		if (!MessageSupPubMap.contains(type)) {// if topic doesnt exist then create it.
 			MessageSupPubMap.put(type, new ConcurrentLinkedQueue<Subscriber>());
 		}
-		//ConcurrentLinkedQueue<Subscriber> queueSubscribers = MessageSupPubMap.get(type);
-		//queueSubscribers.add(m);
 		MessageSupPubMap.get(type).add(m);// add sub m to topic.
 	}
 
@@ -46,8 +44,6 @@ public class MessageBrokerImpl implements MessageBroker {
 		if (!MessageSupPubMap.contains(type)){// if topic doesnt exist then create it.
 			MessageSupPubMap.put(type, new ConcurrentLinkedQueue<Subscriber>());
 		}
-		//ConcurrentLinkedQueue<Subscriber> queueSubscribers = MessageSupPubMap.get(type);
-		//queueSubscribers.add(m);
 		MessageSupPubMap.get(type).add(m); // add sub m to topic
 	}
 
