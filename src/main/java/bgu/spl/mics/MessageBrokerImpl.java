@@ -12,7 +12,7 @@ import java.util.concurrent.*;
  */
 public class MessageBrokerImpl implements MessageBroker {
 
-    // map of events an there future.
+    // map of events and future.
 	private ConcurrentHashMap<Event, Future> eventFutureMap;
 	// sub and the missions he toke.
 	private ConcurrentHashMap<Subscriber, BlockingQueue<Message>> subscriberRegisterMap;
@@ -103,7 +103,9 @@ public class MessageBrokerImpl implements MessageBroker {
 
 	@Override
 	public void unregister(Subscriber m) {
+		// remove m from the subscriberRegisterMap
 		if (subscriberRegisterMap.remove(m) != null) {
+			// if m was in the subscriberRegisterMap  then remove it from each topic he was register to.
 			for (Map.Entry<Class<? extends Message>, ConcurrentLinkedQueue<Subscriber>> iter : MessageSupPubMap.entrySet()) {
 				ConcurrentLinkedQueue<Subscriber> subQ = iter.getValue();
 				if (subQ.contains(m)){

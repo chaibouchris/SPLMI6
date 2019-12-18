@@ -21,6 +21,7 @@ public abstract class Subscriber extends RunnableSubPub {
 
     private boolean terminated = false;
     private HashMap<Class<? extends Message>,Callback> callbackHashMap;
+    private MessageBrokerImpl bejerano = MessageBrokerImpl.getInstance();
 
     /**
      * @param name the Subscriber name (used mainly for debugging purposes -
@@ -52,7 +53,7 @@ public abstract class Subscriber extends RunnableSubPub {
      *                 queue.
      */
     protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
-       MessageBrokerImpl.getInstance().subscribeEvent(type,this);
+       bejerano.subscribeEvent(type,this);
        callbackHashMap.put(type,callback);
     }
 
@@ -77,7 +78,7 @@ public abstract class Subscriber extends RunnableSubPub {
      *                 queue.
      */
     protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
-       MessageBrokerImpl.getInstance().subscribeBroadcast(type,this);
+       bejerano.subscribeBroadcast(type,this);
        callbackHashMap.put(type,callback);
     }
 
@@ -92,7 +93,7 @@ public abstract class Subscriber extends RunnableSubPub {
      *               {@code e}.
      */
     protected final <T> void complete(Event<T> e, T result) {
-        MessageBrokerImpl.getInstance().complete(e,result);
+        bejerano.complete(e,result);
     }
 
     /**
@@ -110,8 +111,14 @@ public abstract class Subscriber extends RunnableSubPub {
     @Override
     public final void run() {
         initialize();
+        bejerano.register(this);
         while (!terminated) {
-            System.out.println("NOT IMPLEMENTED!!!"); //TODO: you should delete this line :)
+            try {
+                Message myLovelyMission = bejerano.awaitMessage(this);// take mission
+                callbackHashMap.get(myLovelyMission).call(myLovelyMission);// do callback.
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 

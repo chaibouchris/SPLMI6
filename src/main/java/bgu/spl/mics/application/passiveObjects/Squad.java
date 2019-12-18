@@ -107,5 +107,4 @@ public class Squad {
 		}
 	    return agentsNames;
     }
-
 }
