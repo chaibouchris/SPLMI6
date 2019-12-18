@@ -2,7 +2,7 @@ package bgu.spl.mics;
 
 abstract class RunnableSubPub implements Runnable {
     private final String name;
-    private final SimplePublisher simplePublisher;
+    protected final SimplePublisher simplePublisher;
 
     /**
      * this method is called once when the event loop starts.
