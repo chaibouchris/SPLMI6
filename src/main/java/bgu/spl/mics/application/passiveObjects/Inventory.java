@@ -1,6 +1,8 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  *  That's where Q holds his gadget (e.g. an explosive pen was used in GoldenEye, a geiger counter in Dr. No, etc).
@@ -12,18 +14,19 @@ import java.util.List;
  */
 public class Inventory {
 	private List<String> gadgets;
+
 	/**
      * Retrieves the single instance of this class.
      */
 
-	private Inventory(){
-	}
-
-	private static class InventoryHolder {
+	public static class InventoryHolder {
 		private static Inventory instance = new Inventory();
 	}
+	private Inventory(){
+		gadgets = new ArrayList<String>();
+	}
 	public static Inventory getInstance() {
-		return Inventory.InventoryHolder.instance;
+		return InventoryHolder.instance;
 	}
 
 
@@ -50,10 +53,8 @@ public class Inventory {
 		if(this.gadgets.contains(gadget)){
 			this.gadgets.remove(gadget);
 			return true;
-		}else{
-			return false;
 		}
-
+		else return false;
 	}
 
 	/**

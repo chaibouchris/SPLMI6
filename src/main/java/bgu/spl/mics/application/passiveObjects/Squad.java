@@ -4,6 +4,7 @@ import bgu.spl.mics.MessageBrokerImpl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Passive data-object representing a information about an agent in MI6.
@@ -19,14 +20,15 @@ public class Squad {
 	 * Retrieves the single instance of this class.
 	 */
 
-	private Squad(){
-	}
 
-	private static class SquadHolder {
+	public static class SquadHolder {
 		private static Squad instance = new Squad();
 	}
+	private Squad(){
+		agents = new ConcurrentHashMap<>();
+	}
 	public static Squad getInstance() {
-		return Squad.SquadHolder.instance;
+		return SquadHolder.instance;
 	}
 
 

@@ -18,6 +18,7 @@ import java.util.HashMap;
  * <p>
  */
 public abstract class Subscriber extends RunnableSubPub {
+
     private boolean terminated = false;
     private HashMap<Class<? extends Message>,Callback> callbackHashMap;
 

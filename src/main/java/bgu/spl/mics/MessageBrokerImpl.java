@@ -1,5 +1,7 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.passiveObjects.Squad;
+
 import java.util.Map;
 import java.util.concurrent.*;
 
@@ -9,24 +11,27 @@ import java.util.concurrent.*;
  * Only private fields and methods can be added to this class.
  */
 public class MessageBrokerImpl implements MessageBroker {
+
     // map of events an there future.
-	private ConcurrentHashMap<Event, Future> eventFutureMap = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<Event, Future> eventFutureMap;
 	// sub and the missions he toke.
-	private ConcurrentHashMap<Subscriber, BlockingQueue<Message>> subscriberRegisterMap = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<Subscriber, BlockingQueue<Message>> subscriberRegisterMap;
 	// topic and its subs.
-	private ConcurrentHashMap<Class<? extends Message>, ConcurrentLinkedQueue<Subscriber>> MessageSupPubMap = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<Class<? extends Message>, ConcurrentLinkedQueue<Subscriber>> MessageSupPubMap;
 
 	/**
 	 * Retrieves the single instance of this class.
 	 */
 
+	public static class MessageBrokerHolder {
+		private static MessageBrokerImpl instance = new MessageBrokerImpl();
+	}
 	private MessageBrokerImpl(){
+		eventFutureMap = new ConcurrentHashMap<>();
+		subscriberRegisterMap = new ConcurrentHashMap<>();
+		MessageSupPubMap = new ConcurrentHashMap<>();
 	}
-
-	private static class MessageBrokerHolder {
-		private static MessageBroker instance = new MessageBrokerImpl();
-	}
-	public static MessageBroker getInstance() {
+	public static MessageBrokerImpl getInstance() {
 		return MessageBrokerHolder.instance;
 	}
 
@@ -35,8 +40,6 @@ public class MessageBrokerImpl implements MessageBroker {
 		if (!MessageSupPubMap.contains(type)) {// if topic doesnt exist then create it.
 			MessageSupPubMap.put(type, new ConcurrentLinkedQueue<Subscriber>());
 		}
-		//ConcurrentLinkedQueue<Subscriber> queueSubscribers = MessageSupPubMap.get(type);
-		//queueSubscribers.add(m);
 		MessageSupPubMap.get(type).add(m);// add sub m to topic.
 	}
 
@@ -45,8 +48,6 @@ public class MessageBrokerImpl implements MessageBroker {
 		if (!MessageSupPubMap.contains(type)){// if topic doesnt exist then create it.
 			MessageSupPubMap.put(type, new ConcurrentLinkedQueue<Subscriber>());
 		}
-		//ConcurrentLinkedQueue<Subscriber> queueSubscribers = MessageSupPubMap.get(type);
-		//queueSubscribers.add(m);
 		MessageSupPubMap.get(type).add(m); // add sub m to topic
 	}
 
