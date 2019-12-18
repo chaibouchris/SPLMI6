@@ -23,6 +23,7 @@ public class Q extends Subscriber {
 	@Override
 	protected void initialize() {
 		MessageBrokerImpl.getInstance().register(this);
+		MessageBrokerImpl.getInstance().subscribeEvent(class<);
 		
 	}
 
