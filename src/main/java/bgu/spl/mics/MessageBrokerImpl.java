@@ -1,5 +1,7 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.passiveObjects.Squad;
+
 import java.util.Map;
 import java.util.concurrent.*;
 
@@ -11,23 +13,25 @@ import java.util.concurrent.*;
 public class MessageBrokerImpl implements MessageBroker {
 
     // map of events an there future.
-	private ConcurrentHashMap<Event, Future> eventFutureMap = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<Event, Future> eventFutureMap;
 	// sub and the missions he toke.
-	private ConcurrentHashMap<Subscriber, BlockingQueue<Message>> subscriberRegisterMap = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<Subscriber, BlockingQueue<Message>> subscriberRegisterMap;
 	// topic and its subs.
-	private ConcurrentHashMap<Class<? extends Message>, ConcurrentLinkedQueue<Subscriber>> MessageSupPubMap = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<Class<? extends Message>, ConcurrentLinkedQueue<Subscriber>> MessageSupPubMap;
 
 	/**
 	 * Retrieves the single instance of this class.
 	 */
 
+	public static class MessageBrokerHolder {
+		private static MessageBrokerImpl instance = new MessageBrokerImpl();
+	}
 	private MessageBrokerImpl(){
+		eventFutureMap = new ConcurrentHashMap<>();
+		subscriberRegisterMap = new ConcurrentHashMap<>();
+		MessageSupPubMap = new ConcurrentHashMap<>();
 	}
-
-	private static class MessageBrokerHolder {
-		private static MessageBroker instance = new MessageBrokerImpl();
-	}
-	public static MessageBroker getInstance() {
+	public static MessageBrokerImpl getInstance() {
 		return MessageBrokerHolder.instance;
 	}
 
