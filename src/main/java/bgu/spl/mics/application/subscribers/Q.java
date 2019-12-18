@@ -10,9 +10,9 @@ import bgu.spl.mics.Subscriber;
  */
 public class Q extends Subscriber {
 
+
 	public Q() {
-		super("Change_This_Name");
-		// TODO Implement this
+		super("Bejerano");
 	}
 
 	@Override
@@ -20,5 +20,7 @@ public class Q extends Subscriber {
 		// TODO Implement this
 		
 	}
+
+
 
 }

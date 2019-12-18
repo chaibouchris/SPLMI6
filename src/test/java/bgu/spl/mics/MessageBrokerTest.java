@@ -16,7 +16,7 @@ public class MessageBrokerTest {
 
     @BeforeEach
     public void setUp(){
-    jonyboy1 = new MessageBrokerImpl();
+    jonyboy1 = (MessageBrokerImpl) MessageBrokerImpl.getInstance();
     bejerano = new testsub("bejerano",call1,call2);
     getEng = new testEvent();
     hey = new testBrodcast();
