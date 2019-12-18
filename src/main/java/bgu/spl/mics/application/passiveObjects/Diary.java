@@ -1,6 +1,8 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Passive object representing the diary where all reports are stored.
@@ -20,16 +22,16 @@ public class Diary {
 	 * Retrieves the single instance of this class.
 	 */
 
-	private Diary(){
-	}
-
-	private static class DiaryHolder {
+	public static class DiaryHolder {
 		private static Diary instance = new Diary();
 	}
-	public static Diary getInstance() {
-		return Diary.DiaryHolder.instance;
+	private Diary(){
+		reports = new ArrayList<Report>();
+		total = 0;
 	}
-
+	public static Diary getInstance() {
+		return DiaryHolder.instance;
+	}
 
 	public List<Report> getReports() {
 		return reports;

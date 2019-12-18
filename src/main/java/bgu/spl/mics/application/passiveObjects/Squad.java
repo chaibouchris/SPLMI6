@@ -14,20 +14,21 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Squad {
 
-	private Map<String, Agent> agents = new ConcurrentHashMap<>();
+	private Map<String, Agent> agents;
 
 	/**
 	 * Retrieves the single instance of this class.
 	 */
 
-	private Squad(){
-	}
 
-	private static class SquadHolder {
+	public static class SquadHolder {
 		private static Squad instance = new Squad();
 	}
+	private Squad(){
+		agents = new ConcurrentHashMap<>();
+	}
 	public static Squad getInstance() {
-		return Squad.SquadHolder.instance;
+		return SquadHolder.instance;
 	}
 
 
