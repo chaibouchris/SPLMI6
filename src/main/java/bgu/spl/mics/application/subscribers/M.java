@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.subscribers;
 
+import bgu.spl.mics.MessageBrokerImpl;
 import bgu.spl.mics.Subscriber;
 
 /**
@@ -11,14 +12,13 @@ import bgu.spl.mics.Subscriber;
 public class M extends Subscriber {
 
 	public M() {
-		super("Change_This_Name");
+		super("M");
 		// TODO Implement this
 	}
 
 	@Override
 	protected void initialize() {
-		// TODO Implement this
-		
+		MessageBrokerImpl.getInstance().register(this);
 	}
 
 }

@@ -13,9 +13,11 @@ import bgu.spl.mics.Publisher;
  */
 public class TimeService extends Publisher {
 
-	public TimeService() {
-		super("Change_This_Name");
-		// TODO Implement this
+	private int duration;
+
+	public TimeService(int duration) {
+		super("TimeService");
+		this.duration = duration;
 	}
 
 	@Override

@@ -86,7 +86,7 @@ public class Squad {
 				this.agents.get(x).acquire();
 			}
 		}
-			else { // agent not in sqad
+			else { // agent not in squad
 				everybodyHere = false;
 			}
 
