@@ -89,7 +89,6 @@ public class Squad {
 			else { // agent not in squad
 				everybodyHere = false;
 			}
-
 		}
 		return everybodyHere;
 	}
