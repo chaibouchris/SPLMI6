@@ -27,7 +27,7 @@ public class Inventory {
 		private static Inventory instance = new Inventory();
 	}
 	private Inventory(){
-		gadgets = new ArrayList<String>();
+		gadgets = new ArrayList<>();
 	}
 	public static Inventory getInstance() {
 		return InventoryHolder.instance;

@@ -3,7 +3,10 @@ package bgu.spl.mics.application.publishers;
 import bgu.spl.mics.Broadcast;
 import bgu.spl.mics.Publisher;
 import bgu.spl.mics.SimplePublisher;
+import bgu.spl.mics.application.messages.TerminateBroadcast;
+
 import bgu.spl.mics.application.messages.TickBroadcast;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,8 +26,8 @@ public class TimeService extends Publisher {
 
 	private int duration;
 	private long delay = 100;
-	private Timer mrTime;
 	private SimplePublisher x;
+	private Timer mrTime;
 
 
 
@@ -32,37 +35,35 @@ public class TimeService extends Publisher {
 	public TimeService(int duration) {
 		super("TimeService");
 		this.duration = duration;
-		mrTime = new Timer();
 		x = this.getSimplePublisher();
-
-
+		mrTime = new Timer();
 
 
 	}
 
 	@Override
 	protected void initialize() {
-		TimerTask tictac = new TimerTask() {
-			@Override
-			public void run() {
-				TickBroadcast tick = new TickBroadcast(duration);
-				x.sendBroadcast(tick);
-			}
-		};
-
-
-
-
-		
+		run();
 	}
 
 	@Override
 	public void run() {
-		while(duration!=0){
-			TickBroadcast tick = new  TickBroadcast(duration);
-			duration--;
-			this.getSimplePublisher().sendBroadcast(tick);
-		}
-	}
+     mrTime.schedule(new TimerTask() {
+		 @Override
+		 public void run() {
+			if(duration==0){// if we reached the final tick terminate all!!!
+				TerminateBroadcast Terminate = new TerminateBroadcast();
+				x.sendBroadcast(Terminate);
+				mrTime.cancel();
+				mrTime.purge();
+			}
+			else{// else send a tick
+				TickBroadcast ticky = new TickBroadcast(duration);
+				x.sendBroadcast(ticky);
+				duration--; // update countdown to terminate
+			}
+		 }
+	 },delay);
 
+	}
 }
