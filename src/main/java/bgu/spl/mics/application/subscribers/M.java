@@ -15,10 +15,12 @@ import bgu.spl.mics.application.passiveObjects.Diary;
 public class M extends Subscriber  {
 
 	private Diary anaFrank;
+	private int id;
 
-	public M() {
+	public M(int id) {
 		super("M");
 		anaFrank = Diary.getInstance();
+		this.id = id;
 	}
 
 	@Override

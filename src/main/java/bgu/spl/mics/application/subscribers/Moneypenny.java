@@ -17,10 +17,12 @@ import java.util.List;
 public class Moneypenny extends Subscriber {
 
 	private Squad saqi;
+	private int id;
 
-	public Moneypenny() {
+	public Moneypenny(int id) {
 		super("MoneyPenny");
 		saqi = Squad.getInstance();
+		this.id = id;
 	}
 
 	@Override

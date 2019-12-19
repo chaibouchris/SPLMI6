@@ -52,7 +52,7 @@ public class InventoryTest {
                 invi.remove(0);
             }
         }
-        catch (FileNotFoundException e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

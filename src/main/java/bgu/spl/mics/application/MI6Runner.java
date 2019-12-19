@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 
@@ -18,7 +17,7 @@ public class MI6Runner {
         // TODO Implement this
     }
 
-    public static JsonObject Read (String file) throws FileNotFoundException {
+    public static JsonObject Read (String file) {
         Gson park = new GsonBuilder().setPrettyPrinting().create();
         JsonObject Derulo = null;
         try (Reader reader = new FileReader(file)){
