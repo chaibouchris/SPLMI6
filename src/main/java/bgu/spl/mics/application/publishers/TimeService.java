@@ -6,7 +6,7 @@ import bgu.spl.mics.SimplePublisher;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
 
 import bgu.spl.mics.application.messages.TickBroadcast;
-import com.sun.org.apache.bcel.internal.generic.NEW;
+
 
 import java.util.Timer;
 import java.util.TimerTask;

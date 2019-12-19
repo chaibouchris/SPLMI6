@@ -21,7 +21,7 @@ public abstract class Subscriber extends RunnableSubPub {
 
     private boolean terminated = false;
     private HashMap<Class<? extends Message>,Callback> callbackHashMap;
-    private MessageBrokerImpl bejerano = MessageBrokerImpl.getInstance();
+    private MessageBrokerImpl bejerano;
 
     /**
      * @param name the Subscriber name (used mainly for debugging purposes -
@@ -29,6 +29,8 @@ public abstract class Subscriber extends RunnableSubPub {
      */
     public Subscriber(String name) {
         super(name);
+        callbackHashMap = new HashMap<>();
+        bejerano = MessageBrokerImpl.getInstance();
     }
 
     /**
@@ -115,7 +117,7 @@ public abstract class Subscriber extends RunnableSubPub {
         while (!terminated) {
             try {
                 Message myLovelyMission = bejerano.awaitMessage(this);// take mission
-                callbackHashMap.get(myLovelyMission).call(myLovelyMission);// do callback.
+                callbackHashMap.get(myLovelyMission.getClass()).call(myLovelyMission);// do callback.
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

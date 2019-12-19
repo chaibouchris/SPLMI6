@@ -15,6 +15,7 @@ public class Future<T> {
 	private boolean done;
 	private T result;
 
+
 	public T getResult() {
 		return result;
 	}
@@ -25,6 +26,7 @@ public class Future<T> {
 	public Future() {
 		done = false;
 		result = null;
+
 	}
 	
 	/**
@@ -75,22 +77,23 @@ public class Future<T> {
      *         elapsed, return null.
      */
 	public T get(long timeout, TimeUnit unit) {
-		if (done){
-			return result;
-		}
-		else {
-			long time = unit.toMillis(timeout);
-			while (!done){
-				try {
-					wait(time);
-					if (!done){
-						return null;
+		synchronized (this) {
+			if (done) {
+				return result;
+			} else {
+				long time = unit.toMillis(timeout);
+				while (!done) {
+					try {
+						wait(time);
+						if (!done) {
+							return null;
+						}
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
 					}
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
 				}
+				return result;
 			}
-			return result;
 		}
 	}
 

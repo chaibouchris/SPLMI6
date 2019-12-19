@@ -83,10 +83,10 @@ public class MessageBrokerImpl implements MessageBroker {
 		ConcurrentLinkedQueue<Subscriber> queueSubs = MessageSupPubMap.get(e.getClass());
 		Future<T> send = new Future<>();
 		try {
+			eventFutureMap.put(e, send);
 			Subscriber sub = queueSubs.remove();
 			BlockingQueue<Message> Qregister = subscriberRegisterMap.get(sub);
 			Qregister.put(e);
-			eventFutureMap.put(e, send);
 			queueSubs.add(sub);
 		} catch (Exception excep){
 			excep.printStackTrace();
