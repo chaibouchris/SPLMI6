@@ -1,8 +1,14 @@
 package bgu.spl.mics.application.publishers;
 
+import bgu.spl.mics.Broadcast;
 import bgu.spl.mics.Publisher;
+import bgu.spl.mics.SimplePublisher;
+import bgu.spl.mics.application.messages.TickBroadcast;
 
 import java.util.Timer;
+import java.util.TimerTask;
+
+
 
 /**
  * TimeService is the global system timer There is only one instance of this Publisher.
@@ -16,21 +22,47 @@ import java.util.Timer;
 public class TimeService extends Publisher {
 
 	private int duration;
+	private long delay = 100;
+	private Timer mrTime;
+	private SimplePublisher x;
+
+
+
 
 	public TimeService(int duration) {
 		super("TimeService");
 		this.duration = duration;
+		mrTime = new Timer();
+		x = this.getSimplePublisher();
+
+
+
+
 	}
 
 	@Override
 	protected void initialize() {
-		// TODO Implement this
+		TimerTask tictac = new TimerTask() {
+			@Override
+			public void run() {
+				TickBroadcast tick = new TickBroadcast(duration);
+				x.sendBroadcast(tick);
+			}
+		};
+
+
+
+
 		
 	}
 
 	@Override
 	public void run() {
-		// TODO Implement this
+		while(duration!=0){
+			TickBroadcast tick = new  TickBroadcast(duration);
+			duration--;
+			this.getSimplePublisher().sendBroadcast(tick);
+		}
 	}
-    Timer.
+
 }
