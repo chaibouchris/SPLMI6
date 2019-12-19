@@ -15,6 +15,9 @@ public class Future<T> {
 	private boolean done;
 	private T result;
 
+	public T getResult() {
+		return result;
+	}
 
 	/**
 	 * This should be the the only public constructor in this class.
@@ -90,4 +93,5 @@ public class Future<T> {
 			return result;
 		}
 	}
+
 }

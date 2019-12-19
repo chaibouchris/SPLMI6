@@ -1,5 +1,9 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import com.google.gson.Gson;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +46,7 @@ public class Inventory {
 			gadgets.add(x);
 		}
 	}
+
 	
 	/**
      * acquires a gadget and returns 'true' if it exists.
@@ -65,6 +70,13 @@ public class Inventory {
 	 * This method is called by the main method in order to generate the output.
 	 */
 	public void printToFile(String filename){
-		//TODO: Implement this
+		String output = gadgets.toString();
+		Gson gisi = new Gson();
+		try {
+			gisi.toJson(gadgets, new FileWriter(filename));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 }
