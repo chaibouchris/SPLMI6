@@ -24,45 +24,30 @@ import java.util.TimerTask;
 public class TimeService extends Publisher {
 
 	private int duration;
-	private long delay = 100;
-	private SimplePublisher x;
-	private Timer mrTime;
-
-
+	private int currTick;
 
 
 	public TimeService(int duration) {
 		super("TimeService");
 		this.duration = duration;
-		x = this.getSimplePublisher();
-		mrTime = new Timer();
-
-
+		currTick = 0;
 	}
 
 	@Override
 	protected void initialize() {
-		run();
 	}
 
 	@Override
 	public void run() {
-     mrTime.schedule(new TimerTask() {
-		 @Override
-		 public void run() {
-			if(duration==0){// if we reached the final tick terminate all!!!
-				TerminateBroadcast Terminate = new TerminateBroadcast();
-				x.sendBroadcast(Terminate);
-				mrTime.cancel();
-				mrTime.purge();
+		while (currTick < duration){
+			TickBroadcast TB = new TickBroadcast(currTick);
+			getSimplePublisher().sendBroadcast(TB);
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
-			else{// else send a tick
-				TickBroadcast ticky = new TickBroadcast(duration);
-				x.sendBroadcast(ticky);
-				duration--; // update countdown to terminate
-			}
-		 }
-	 },delay);
-
+			currTick++;
+		}
 	}
 }
