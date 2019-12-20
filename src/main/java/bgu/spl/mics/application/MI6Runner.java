@@ -1,12 +1,11 @@
 package bgu.spl.mics.application;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import bgu.spl.mics.Subscriber;
+import com.google.gson.*;
 
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.List;
 
 /** This is the Main class of the application. You should parse the input file,
  * create the different instances of the objects, and run the system.
@@ -14,7 +13,10 @@ import java.io.Reader;
  */
 public class MI6Runner {
     public static void main(String[] args) {
-        // TODO Implement this
+        String path = args[0];
+        JsonObject derulo = null;
+        derulo = JsonParser.parseReader(new FileReader(path)).getAsJsonObject();
+        List<Subscriber> subs = loadSubscribers(derulo);
     }
 
     public static JsonObject Read (String file) {
