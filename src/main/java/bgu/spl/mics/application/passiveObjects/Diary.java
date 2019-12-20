@@ -1,5 +1,9 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import com.google.gson.Gson;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,7 +47,9 @@ public class Diary {
 	 * @param reportToAdd - the report to add
 	 */
 	public void addReport(Report reportToAdd){
-		reports.add(reportToAdd);
+		synchronized (this) {
+			reports.add(reportToAdd);
+		}
 	}
 
 	/**
@@ -54,7 +60,13 @@ public class Diary {
 	 * This method is called by the main method in order to generate the output.
 	 */
 	public void printToFile(String filename){
-		//TODO: Implement this
+		String output = reports.toString();
+		Gson gisi = new Gson();
+		try {
+			gisi.toJson(output, new FileWriter(filename));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

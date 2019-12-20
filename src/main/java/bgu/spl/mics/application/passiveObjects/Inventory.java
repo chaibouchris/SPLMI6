@@ -73,10 +73,9 @@ public class Inventory {
 		String output = gadgets.toString();
 		Gson gisi = new Gson();
 		try {
-			gisi.toJson(gadgets, new FileWriter(filename));
+			gisi.toJson(output, new FileWriter(filename));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 }
