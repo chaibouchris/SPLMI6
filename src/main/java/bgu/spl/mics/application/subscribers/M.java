@@ -18,7 +18,7 @@ import java.util.List;
  * You can add private fields and public methods to this class.
  * You MAY change constructor signatures and even add new public constructors.
  */
-public class M extends Subscriber  {
+public class M extends Subscriber {
 
 	private Diary anaFrank;
 	private int id;
@@ -35,16 +35,16 @@ public class M extends Subscriber  {
 	protected void initialize() {
 		MessageBrokerImpl.getInstance().register(this);
 
-		subscribeBroadcast(TickBroadcast.class, (B) ->{
+		subscribeBroadcast(TickBroadcast.class, (B) -> {
 			setCurrTick(B.getTick());
 		});
 
-		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
+		subscribeBroadcast(TerminateBroadcast.class, (TB) -> {
 			MessageBrokerImpl.getInstance().unregister(this);
 			terminate();
 		});
 
-		subscribeEvent(MissionReceivedEvent.class,(E)->{
+		subscribeEvent(MissionReceivedEvent.class, (E) -> {
 			anaFrank.incrementTotal();
 
 			MissionInfo MI = E.getMissionInfo();
@@ -53,34 +53,34 @@ public class M extends Subscriber  {
 			int duration = MI.getDuration();
 
 			Future<AgentsAvialableResult> AAR = pubi.sendEvent(new AgentsAvailableEvent(serials));
-			if (AAR == null){
+			if (AAR == null) {
 				MessageBrokerImpl.getInstance().unregister(this);
 				terminate();
 				return;
 			}
-			if (AAR.get() == null || !AAR.get().getResult()){
+			if (AAR.get() == null || !AAR.get().getResult()) {
 				return;
 			}
 
 			Future<GadgetAvialableResult> gadgetAvaiable = pubi.sendEvent(new GadgetAvailableEvent(MI.getGadget()));
-			if (gadgetAvaiable == null){
+			if (gadgetAvaiable == null) {
 				MessageBrokerImpl.getInstance().unregister(this);
 				terminate();
 				return;
 			}
-			if (gadgetAvaiable.get() == null || !gadgetAvaiable.get().getResult()){
+			if (gadgetAvaiable.get() == null || !gadgetAvaiable.get().getResult()) {
 				ReleaseAgents(pubi, serials);
 				return;
 			}
 
 			GadgetAvialableResult result = gadgetAvaiable.get();
-			if (result.getTime() > MI.getTimeExpired()){
+			if (result.getTime() > MI.getTimeExpired()) {
 				ReleaseAgents(pubi, serials);
 				return;
 			}
 
 			Future<Boolean> UTB = pubi.sendEvent(new UnleashTheBeastEvent(serials, duration));
-			if (UTB == null){
+			if (UTB == null) {
 				ReleaseAgents(pubi, serials);
 				return;
 			}
@@ -90,25 +90,17 @@ public class M extends Subscriber  {
 		});
 	}
 
-	public void setCurrTick(int toSet){
+	public void setCurrTick(int toSet) {
 		this.currTick = toSet;
 	}
 
-	private void ReleaseAgents(SimplePublisher pubi, List<String> serials){
+	private void ReleaseAgents(SimplePublisher pubi, List<String> serials) {
 		Future<Boolean> BB = pubi.sendEvent(new AboardMissionEvent(serials));
-		while (BB != null && BB.get() == null){
+		while (BB != null && BB.get() == null) {
 			BB = pubi.sendEvent(new AboardMissionEvent(serials));
+		}
 	}
-
-private GadgetAvailableEvent createGadgetEvent(MissionReceivedEvent event){
-	 return new GadgetAvailableEvent(event.getMissionInfo().getGadget());
-}
-private AgentsAvailableEvent createAgentEvent(MissionReceivedEvent event){
-	return new AgentsAvailableEvent(event.getMissionInfo().getSerialAgentsNumbers());
 }
 
-private AboardMissionEvent creatAboardEvent(MissionReceivedEvent event){
-		return new AboardMissionEvent(event.getMissionInfo().getSerialAgentsNumbers());
-}
 
-}
+
