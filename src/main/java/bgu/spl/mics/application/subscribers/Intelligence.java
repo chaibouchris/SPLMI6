@@ -4,6 +4,7 @@ import bgu.spl.mics.MessageBrokerImpl;
 import bgu.spl.mics.SimplePublisher;
 import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.MissionReceivedEvent;
+import bgu.spl.mics.application.messages.TerminateBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.MissionInfo;
 
@@ -35,6 +36,7 @@ public class Intelligence extends Subscriber {
 	@Override
 	protected void initialize() {
 		MessageBrokerImpl.getInstance().register(this);
+
 		SimplePublisher pubi = getSimplePublisher();
 		subscribeBroadcast(TickBroadcast.class, (E)->{
 			MissionInfo MI = theList.get(0);
@@ -43,6 +45,11 @@ public class Intelligence extends Subscriber {
 				pubi.sendEvent(new MissionReceivedEvent(MI));
 				theList.remove(0);
 			}
+		});
+
+		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
+			MessageBrokerImpl.getInstance().unregister(this);
+			terminate();
 		});
 	}
 
