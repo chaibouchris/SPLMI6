@@ -5,9 +5,9 @@ public class GadgetAvialableResult {
     private int time;
     private Boolean result;
 
-    public GadgetAvialableResult(){
-        time = -1;
-        result = false;
+    public GadgetAvialableResult(Boolean r, int time){
+        this.time = time;
+        result = r;
     }
 
     public int getTime(){

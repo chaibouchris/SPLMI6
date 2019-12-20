@@ -5,6 +5,7 @@ import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.GadgetAvailableEvent;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
+import bgu.spl.mics.application.passiveObjects.GadgetAvialableResult;
 import bgu.spl.mics.application.passiveObjects.Inventory;
 
 /**
@@ -39,12 +40,8 @@ public class Q extends Subscriber {
 		});
 
 		subscribeEvent(GadgetAvailableEvent.class, (E) -> {
-			if (invi.getItem(E.getGadget())) {
-				complete(E, true);
-			} else {
-				complete(E, false);
-			}
-
+			GadgetAvialableResult GAR = new GadgetAvialableResult(invi.getItem(E.getGadget()), currTick);
+			complete(E, GAR);
 		});
 	}
 
