@@ -3,6 +3,7 @@ package bgu.spl.mics.application.subscribers;
 import bgu.spl.mics.MessageBrokerImpl;
 import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.GadgetAvailableEvent;
+import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.Inventory;
 
 /**
@@ -14,16 +15,23 @@ import bgu.spl.mics.application.passiveObjects.Inventory;
 public class Q extends Subscriber {
 
 	private Inventory invi;
+	private int currTick;
 
 
 	public Q() {
 		super("Q");
 		invi = Inventory.getInstance();
+		currTick = 0;
 	}
 
 	@Override
 	protected void initialize() {
 		MessageBrokerImpl.getInstance().register(this);
+		subscribeBroadcast(TickBroadcast.class, (B) ->{
+			setCurrTick(B.getTick());
+		});
+
+		subscribeBroadcast();
 		subscribeEvent(GadgetAvailableEvent.class, (E) -> {
 			if (invi.getItem(E.getGadget())) {
 				complete(E, true);
@@ -32,6 +40,9 @@ public class Q extends Subscriber {
 			}
 
 		});
+	}
 
+	public void setCurrTick(int toSet){
+		this.currTick = toSet;
 	}
 }
