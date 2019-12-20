@@ -1,6 +1,5 @@
 package bgu.spl.mics.application.publishers;
 
-import bgu.spl.mics.Broadcast;
 import bgu.spl.mics.Publisher;
 import bgu.spl.mics.SimplePublisher;
 import bgu.spl.mics.application.messages.TerminateBroadcast;

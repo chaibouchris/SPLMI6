@@ -63,4 +63,8 @@ public class Diary {
 	public int getTotal(){
 		return total;
 	}
+
+	public void incrementTotal(){
+		this.total = total++;
+	}
 }
