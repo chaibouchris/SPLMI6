@@ -3,6 +3,7 @@ package bgu.spl.mics.application.passiveObjects;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Passive object representing the diary where all reports are stored.
@@ -15,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Diary {
 
 	private List<Report> reports;
-	private int total;
+	private AtomicInteger total;
 
 
 	/**
@@ -27,7 +28,7 @@ public class Diary {
 	}
 	private Diary(){
 		reports = new ArrayList<Report>();
-		total = 0;
+		total = new AtomicInteger(0);
 	}
 	public static Diary getInstance() {
 		return DiaryHolder.instance;
@@ -61,10 +62,10 @@ public class Diary {
 	 * @return the total number of received missions (executed / aborted) be all the M-instances.
 	 */
 	public int getTotal(){
-		return total;
+		return total.get();
 	}
 
 	public void incrementTotal(){
-		this.total = total++;
+		this.total.incrementAndGet();
 	}
 }
