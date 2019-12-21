@@ -3,8 +3,10 @@ package bgu.spl.mics.application;
 import bgu.spl.mics.Subscriber;
 import com.google.gson.*;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 
 /** This is the Main class of the application. You should parse the input file,
@@ -15,7 +17,11 @@ public class MI6Runner {
     public static void main(String[] args) {
         String path = args[0];
         JsonObject derulo = null;
-        derulo = JsonParser.parseReader(new FileReader(path)).getAsJsonObject();
+        try {
+            derulo = JsonParser.parseReader(new FileReader(path)).getAsJsonObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         List<Subscriber> subs = loadSubscribers(derulo);
     }
 
@@ -29,6 +35,11 @@ public class MI6Runner {
             e.printStackTrace();
         }
         return Derulo;
+    }
+
+    public static List<Subscriber> loadSubscribers(JsonObject JJ){
+        List<Subscriber> thelist = new ArrayList<>();
+        return thelist;
     }
 }
 
