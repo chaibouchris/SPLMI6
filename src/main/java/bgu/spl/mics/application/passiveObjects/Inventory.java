@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,12 +71,13 @@ public class Inventory {
 	 * This method is called by the main method in order to generate the output.
 	 */
 	public void printToFile(String filename){
-		String output = gadgets.toString();
 		Gson gisi = new Gson();
+		String output = gisi.toJson(gadgets);
 		try {
-			gisi.toJson(output, new FileWriter(filename));
+			Writer amos = new FileWriter(filename);
+			amos.write(output);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("illegal filename");
 		}
 	}
 }
