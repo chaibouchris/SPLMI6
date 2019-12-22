@@ -121,7 +121,9 @@ public abstract class Subscriber extends RunnableSubPub {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
+
         }
+        bejerano.unregister(this);
     }
 
 }
