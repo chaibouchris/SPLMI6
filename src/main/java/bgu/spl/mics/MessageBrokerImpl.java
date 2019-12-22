@@ -17,7 +17,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	// sub and the missions he toke.
 	private ConcurrentHashMap<Subscriber, BlockingQueue<Message>> subscriberRegisterMap;
 	// topic and its subs.
-	private ConcurrentHashMap<Class<? extends Message>, ConcurrentLinkedQueue<Subscriber>> MessageSupPubMap;
+	private ConcurrentHashMap<Class<? extends Message>, LinkedBlockingQueue<Subscriber>> MessageSupPubMap;
 
 	/**
 	 * Retrieves the single instance of this class.
@@ -37,8 +37,8 @@ public class MessageBrokerImpl implements MessageBroker {
 
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, Subscriber m) {
-		if (!MessageSupPubMap.contains(type)) {// if topic doesnt exist then create it.
-			MessageSupPubMap.put(type, new ConcurrentLinkedQueue<Subscriber>());
+		if (MessageSupPubMap.get(type)==null) {// if topic doesnt exist then create it.
+			MessageSupPubMap.put(type, new LinkedBlockingQueue<Subscriber>());
 		}
 		MessageSupPubMap.get(type).add(m);// add sub m to topic.
 	}
@@ -46,7 +46,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, Subscriber m) {
 		if (!MessageSupPubMap.contains(type)){// if topic doesnt exist then create it.
-			MessageSupPubMap.put(type, new ConcurrentLinkedQueue<Subscriber>());
+			MessageSupPubMap.put(type, new LinkedBlockingQueue<>());
 		}
 		MessageSupPubMap.get(type).add(m); // add sub m to topic
 	}
@@ -58,11 +58,13 @@ public class MessageBrokerImpl implements MessageBroker {
 
 	@Override
 	public void sendBroadcast(Broadcast b) {
-		ConcurrentLinkedQueue<Subscriber> queueSubs = getTopicSubs(b);
+		LinkedBlockingQueue<Subscriber> queueSubs = getTopicSubs(b);
+		if(queueSubs==null)
+			return;
 		for(Subscriber sub: queueSubs){
 			BlockingQueue<Message> registerQ = getSubQueue(sub);
 			try {
-				registerQ.put(b);
+				registerQ.add(b);
 			} catch (Exception e){
 				e.printStackTrace();
 			}
@@ -73,21 +75,23 @@ public class MessageBrokerImpl implements MessageBroker {
 		return subscriberRegisterMap.get(sub);
 	}
 
-	private ConcurrentLinkedQueue<Subscriber> getTopicSubs(Broadcast b) {
+	private LinkedBlockingQueue<Subscriber> getTopicSubs(Broadcast b) {
 		return MessageSupPubMap.get(b.getClass());
 	}
 
 
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
-		ConcurrentLinkedQueue<Subscriber> queueSubs = MessageSupPubMap.get(e.getClass());
+		BlockingQueue<Subscriber> queueSubs = MessageSupPubMap.get(e.getClass());
 		Future<T> send = new Future<>();
 		try {
+			if (queueSubs == null)
+				return null;
 			eventFutureMap.put(e, send);
 			Subscriber sub = queueSubs.remove();
 			BlockingQueue<Message> Qregister = subscriberRegisterMap.get(sub);
-			Qregister.put(e);//to the tail of the queue
-			queueSubs.add(sub);//
+			Qregister.add(e);
+			queueSubs.add(sub);
 		} catch (Exception excep){
 			excep.printStackTrace();
 		}
@@ -106,8 +110,8 @@ public class MessageBrokerImpl implements MessageBroker {
 		// remove m from the subscriberRegisterMap
 		if (subscriberRegisterMap.remove(m) != null) {
 			// if m was in the subscriberRegisterMap  then remove it from each topic he was register to.
-			for (Map.Entry<Class<? extends Message>, ConcurrentLinkedQueue<Subscriber>> iter : MessageSupPubMap.entrySet()) {
-				ConcurrentLinkedQueue<Subscriber> subQ = iter.getValue();
+			for (Map.Entry<Class<? extends Message>, LinkedBlockingQueue<Subscriber>> iter : MessageSupPubMap.entrySet()) {
+				LinkedBlockingQueue<Subscriber> subQ = iter.getValue();
 				if (subQ.contains(m)){
 					subQ.remove(m);
 				}
