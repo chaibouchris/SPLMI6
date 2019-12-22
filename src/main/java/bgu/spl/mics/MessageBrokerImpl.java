@@ -37,16 +37,16 @@ public class MessageBrokerImpl implements MessageBroker {
 
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, Subscriber m) {
-		if (MessageSupPubMap.get(type)==null) {// if topic doesnt exist then create it.
-			MessageSupPubMap.put(type, new LinkedBlockingQueue<Subscriber>());
+		if (MessageSupPubMap.get(type) == null) {// if topic doesnt exist then create it.
+			MessageSupPubMap.putIfAbsent(type, new LinkedBlockingQueue<Subscriber>());
 		}
 		MessageSupPubMap.get(type).add(m);// add sub m to topic.
 	}
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, Subscriber m) {
-		if (!MessageSupPubMap.contains(type)){// if topic doesnt exist then create it.
-			MessageSupPubMap.put(type, new LinkedBlockingQueue<>());
+		if (MessageSupPubMap.get(type) == null){// if topic doesnt exist then create it.
+			MessageSupPubMap.putIfAbsent(type, new LinkedBlockingQueue<>());
 		}
 		MessageSupPubMap.get(type).add(m); // add sub m to topic
 	}
@@ -101,7 +101,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	@Override
 	public void register(Subscriber m) {
 		if (!subscriberRegisterMap.contains(m)){
-			subscriberRegisterMap.put(m, new LinkedBlockingQueue<>());
+			subscriberRegisterMap.putIfAbsent(m, new LinkedBlockingQueue<>());
 		}
 	}
 

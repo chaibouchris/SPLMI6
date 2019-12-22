@@ -122,6 +122,7 @@ public abstract class Subscriber extends RunnableSubPub {
                 Thread.currentThread().interrupt();
             }
         }
+        bejerano.unregister(this);
     }
 
 }
