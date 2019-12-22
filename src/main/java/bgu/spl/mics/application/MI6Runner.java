@@ -1,6 +1,7 @@
 package bgu.spl.mics.application;
 
 import bgu.spl.mics.Subscriber;
+import bgu.spl.mics.application.passiveObjects.Agent;
 import com.google.gson.*;
 
 import java.io.FileNotFoundException;
@@ -40,6 +41,28 @@ public class MI6Runner {
     public static List<Subscriber> loadSubscribers(JsonObject JJ){
         List<Subscriber> thelist = new ArrayList<>();
         return thelist;
+    }
+
+    public String[] loadInventory(JsonArray inventory){
+        String[] gadgets = new String[inventory.size()];
+        for (int i = 0; i<inventory.size();i++){
+            gadgets[i] = inventory.get(i).getAsString();
+        }
+        return gadgets;
+    }
+
+    public Agent[] loadSquad (JsonArray squad){
+        Agent[] agents = new Agent[squad.size()];
+        for (int i = 0; i<squad.size();i++){
+            JsonObject agent = squad.get(i).getAsJsonObject();
+            for (int j = 0; j<agent.size();j++){
+                String name = agent.get("name").getAsString();
+                String serialNumber = agent.get("serialNumber").getAsString();
+                Agent a = new Agent (name,serialNumber);
+                agents[i] = a;
+            }
+        }
+        return agents;
     }
 }
 
