@@ -26,7 +26,7 @@ public class SquadTest {
         }
         agents = new Agent[4];
         for (int i = 0; i < 4; i++)
-            agents[i] = new Agent();
+            agents[i] = new Agent("rr","08");
         agents[0].setName("Coco Loco");
         agents[1].setName("BB Netanyahu");
         agents[2].setName("Avi Asulin");

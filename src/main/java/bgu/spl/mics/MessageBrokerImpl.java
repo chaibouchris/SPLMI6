@@ -86,8 +86,8 @@ public class MessageBrokerImpl implements MessageBroker {
 			eventFutureMap.put(e, send);
 			Subscriber sub = queueSubs.remove();
 			BlockingQueue<Message> Qregister = subscriberRegisterMap.get(sub);
-			Qregister.put(e);
-			queueSubs.add(sub);
+			Qregister.put(e);//to the tail of the queue
+			queueSubs.add(sub);//
 		} catch (Exception excep){
 			excep.printStackTrace();
 		}
