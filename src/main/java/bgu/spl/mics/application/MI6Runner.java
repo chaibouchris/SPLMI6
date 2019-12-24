@@ -1,6 +1,5 @@
 package bgu.spl.mics.application;
 
-import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.passiveObjects.Agent;
 import bgu.spl.mics.application.passiveObjects.Inventory;
 import bgu.spl.mics.application.passiveObjects.MissionInfo;
@@ -70,9 +69,14 @@ public class MI6Runner {
         JsonArray intelligence = services.getAsJsonArray("intelligence");
         List<MissionInfo> MI = new ArrayList<MissionInfo>();
         for (int i = 0; i < intelligence.size(); i++){
-            JsonObject
+            JsonObject JJ = intelligence.get(i).getAsJsonObject();
+            JsonArray missions = JJ.getAsJsonArray("missions");
+            for (int j = 0; j < missions.size(); j++){
+                JsonObject misInfo = missions.get(j).getAsJsonObject();
+            }
         }
     }
+
 
 
     public static JsonObject Read (String file) {
