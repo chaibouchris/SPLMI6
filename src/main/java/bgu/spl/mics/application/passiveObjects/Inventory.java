@@ -79,5 +79,6 @@ public class Inventory {
 		} catch (IOException e) {
 			System.out.println("illegal filename");
 		}
+		System.out.println(output);
 	}
 }

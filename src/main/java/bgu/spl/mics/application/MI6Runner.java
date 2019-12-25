@@ -22,7 +22,7 @@ import java.util.List;
 public class MI6Runner {
 
     public static void main(String[] args) {
-        String path = args[0];
+        String path = "input201[3].json";
         List<Thread> fredList = new ArrayList<>();
         fredList.add(Thread.currentThread());
         try {
@@ -71,7 +71,7 @@ public class MI6Runner {
             JsonArray missions = JJ.getAsJsonArray("missions");
             for (int j = 0; j < missions.size(); j++){
                 JsonObject misInfo = missions.get(j).getAsJsonObject();
-                JsonArray serials = misInfo.getAsJsonArray("serialAgentsNumber");
+                JsonArray serials = misInfo.getAsJsonArray("serialAgentsNumbers");
                 List<String> serialNumbers = new ArrayList<>();
                 for (int k = 0; k < serials.size(); k++){
                     String serial = serials.get(k).getAsString();
