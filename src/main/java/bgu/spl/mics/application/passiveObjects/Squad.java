@@ -45,7 +45,7 @@ public class Squad {
 	/**
 	 * Releases agents.
 	 */
-	public void releaseAgents(List<String> serials){
+	public synchronized void releaseAgents(List<String> serials){
 		for (String x:serials) {
 			if(this.agents.containsKey(x)){
 				agents.get(x).release();

@@ -52,6 +52,14 @@ public class MI6Runner {
         LoadTimeService(services, threadList);
 
         Inventory.getInstance().printToFile("inventory.json");
+
+        for (Thread freddi : threadList){
+            try {
+                freddi.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         Diary.getInstance().printToFile("diary.json");
     }
 
