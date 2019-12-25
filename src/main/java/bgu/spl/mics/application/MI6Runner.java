@@ -1,5 +1,6 @@
 package bgu.spl.mics.application;
 
+import bgu.spl.mics.application.myClasses.LoadLatch;
 import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.application.publishers.TimeService;
 import bgu.spl.mics.application.subscribers.Intelligence;
@@ -14,6 +15,7 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /** This is the Main class of the application. You should parse the input file,
  * create the different instances of the objects, and run the system.
@@ -24,7 +26,6 @@ public class MI6Runner {
     public static void main(String[] args) {
         String path = "input201[3].json";
         List<Thread> fredList = new ArrayList<>();
-        fredList.add(Thread.currentThread());
         try {
             BufferedReader Yoram = new BufferedReader(new FileReader(path));
             Gson Goku = new Gson();
@@ -49,9 +50,11 @@ public class MI6Runner {
         LoadMoneypenny(services, threadList);
         LoadQ(threadList);
         LoadIntelligence(services, threadList);
-        LoadTimeService(services, threadList);
+        Thread timeService = LoadTimeService(services);
 
-        Inventory.getInstance().printToFile("inventory.json");
+
+        LoadLatch latch = new LoadLatch(threadList, timeService);
+        latch.start();
 
         for (Thread freddi : threadList){
             try {
@@ -60,16 +63,16 @@ public class MI6Runner {
                 e.printStackTrace();
             }
         }
+        Inventory.getInstance().printToFile("inventory.json");
         Diary.getInstance().printToFile("diary.json");
     }
 
-    private static void LoadTimeService(JsonObject services, List<Thread> threadList) {
+    private static Thread LoadTimeService(JsonObject services) {
         int time = services.get("time").getAsInt();
         TimeService tiesto = new TimeService(time);
         Thread timeService = new Thread(tiesto);
         timeService.setName("TimeService");
-        threadList.add(timeService);
-        timeService.start();
+        return timeService;
     }
 
     private static void LoadIntelligence(JsonObject services, List<Thread> threadList) {
@@ -99,7 +102,6 @@ public class MI6Runner {
             Thread Ekrueger = new Thread(intel);
             Ekrueger.setName("Intelligence "+i);
             threadList.add(Ekrueger);
-            Ekrueger.start();
         }
     }
 
@@ -107,7 +109,6 @@ public class MI6Runner {
         Thread q = new Thread(new Q());
         q.setName("Q");
         threadList.add(q);
-        q.start();
     }
 
     private static void LoadMoneypenny(JsonObject services, List<Thread> threadList) {
@@ -117,7 +118,6 @@ public class MI6Runner {
             Thread fredi = new Thread(Mp3);
             fredi.setName("Moneypenny "+j);
             threadList.add(fredi);
-            fredi.start();
         }
     }
 
@@ -128,7 +128,6 @@ public class MI6Runner {
             Thread fred = new Thread(mamasita);
             fred.setName("M "+i);
             threadList.add(fred);
-            fred.start();
         }
     }
 

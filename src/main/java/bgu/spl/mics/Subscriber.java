@@ -2,6 +2,8 @@ package bgu.spl.mics;
 
 import java.util.HashMap;
 
+import static bgu.spl.mics.application.myClasses.LoadLatch.CountdownLatch;
+
 /**
  * The Subscriber is an abstract class that any subscriber in the system
  * must extend. The abstract Subscriber class is responsible to get and
@@ -113,6 +115,7 @@ public abstract class Subscriber extends RunnableSubPub {
     @Override
     public final void run() {
         initialize();
+        CountdownLatch();
         bejerano.register(this);
         while (!terminated) {
             try {
@@ -123,6 +126,7 @@ public abstract class Subscriber extends RunnableSubPub {
             }
         }
         bejerano.unregister(this);
+
     }
 
 }

@@ -35,9 +35,8 @@ public class Intelligence extends Subscriber {
 
 	@Override
 	protected void initialize() {
-		MessageBrokerImpl.getInstance().register(this);
-
 		SimplePublisher pubi = getSimplePublisher();
+
 		subscribeBroadcast(TickBroadcast.class, (E)->{
 			MissionInfo MI = theList.get(0);
 			setCurrTick(E.getTick());

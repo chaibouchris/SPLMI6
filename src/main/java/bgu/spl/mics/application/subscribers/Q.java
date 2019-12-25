@@ -5,7 +5,7 @@ import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.GadgetAvailableEvent;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
-import bgu.spl.mics.application.passiveObjects.GadgetAvialableResult;
+import bgu.spl.mics.application.myClasses.GadgetAvialableResult;
 import bgu.spl.mics.application.passiveObjects.Inventory;
 
 /**
@@ -28,8 +28,6 @@ public class Q extends Subscriber {
 
 	@Override
 	protected void initialize() {
-		MessageBrokerImpl.getInstance().register(this);
-
 		subscribeBroadcast(TickBroadcast.class, (B) ->{
 			setCurrTick(B.getTick());
 		});

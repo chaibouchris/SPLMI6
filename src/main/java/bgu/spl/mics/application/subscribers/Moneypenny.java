@@ -5,7 +5,7 @@ import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.AgentsAvailableEvent;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
-import bgu.spl.mics.application.passiveObjects.AgentsAvialableResult;
+import bgu.spl.mics.application.myClasses.AgentsAvialableResult;
 import bgu.spl.mics.application.passiveObjects.Squad;
 
 import java.util.List;
@@ -32,8 +32,6 @@ public class Moneypenny extends Subscriber {
 
 	@Override
 	protected void initialize() {
-		MessageBrokerImpl.getInstance().register(this);
-
 		subscribeBroadcast(TickBroadcast.class, (B) ->{
 			setCurrTick(B.getTick());
 		});
@@ -48,6 +46,7 @@ public class Moneypenny extends Subscriber {
 			AgentsAvialableResult AAR = new AgentsAvialableResult(this.id, saqi.getAgents(serials),saqi.getAgentsNames(serials));
 			complete(E, AAR);
 		});
+
 	}
 
 	public void setCurrTick(int toSet){

@@ -57,7 +57,7 @@ public class Squad {
 	 * simulates executing a mission by calling sleep.
 	 * @param time   milliseconds to sleep
 	 */
-	public synchronized void sendAgents(List<String> serials, int time){
+	public void sendAgents(List<String> serials, int time){
 		try {
 			Thread.sleep(100*time);
 		} catch (InterruptedException e) {

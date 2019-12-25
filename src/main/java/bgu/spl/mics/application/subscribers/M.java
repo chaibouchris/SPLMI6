@@ -5,9 +5,9 @@ import bgu.spl.mics.MessageBrokerImpl;
 import bgu.spl.mics.SimplePublisher;
 import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.*;
-import bgu.spl.mics.application.passiveObjects.AgentsAvialableResult;
+import bgu.spl.mics.application.myClasses.AgentsAvialableResult;
 import bgu.spl.mics.application.passiveObjects.Diary;
-import bgu.spl.mics.application.passiveObjects.GadgetAvialableResult;
+import bgu.spl.mics.application.myClasses.GadgetAvialableResult;
 import bgu.spl.mics.application.passiveObjects.MissionInfo;
 
 import java.util.List;
@@ -33,8 +33,6 @@ public class M extends Subscriber {
 
 	@Override
 	protected void initialize() {
-		MessageBrokerImpl.getInstance().register(this);
-
 		subscribeBroadcast(TickBroadcast.class, (B) -> {
 			setCurrTick(B.getTick());
 		});
