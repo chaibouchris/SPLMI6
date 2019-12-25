@@ -1,9 +1,8 @@
 package bgu.spl.mics.application;
 
-import bgu.spl.mics.application.passiveObjects.Agent;
-import bgu.spl.mics.application.passiveObjects.Inventory;
-import bgu.spl.mics.application.passiveObjects.MissionInfo;
-import bgu.spl.mics.application.passiveObjects.Squad;
+import bgu.spl.mics.application.passiveObjects.*;
+import bgu.spl.mics.application.publishers.TimeService;
+import bgu.spl.mics.application.subscribers.Intelligence;
 import bgu.spl.mics.application.subscribers.M;
 import bgu.spl.mics.application.subscribers.Moneypenny;
 import bgu.spl.mics.application.subscribers.Q;
@@ -46,14 +45,61 @@ public class MI6Runner {
     }
 
     private static void showMustGoOn(JsonObject services, List<Thread> threadList) {
-        int cuantosM = services.get("M").getAsInt();
-        for (int i = 0; i < cuantosM; i++){
-            M mamasita = new M(i);
-            Thread fred = new Thread(mamasita);
-            threadList.add(fred);
-            fred.start();
-        }
+        loadM(services, threadList);
+        LoadMoneypenny(services, threadList);
+        LoadQ(threadList);
+        LoadIntelligence(services, threadList);
+        LoadTimeService(services, threadList);
 
+        Inventory.getInstance().printToFile("inventory.json");
+        Diary.getInstance().printToFile("diary.json");
+    }
+
+    private static void LoadTimeService(JsonObject services, List<Thread> threadList) {
+        int time = services.get("time").getAsInt();
+        TimeService tiesto = new TimeService(time);
+        Thread timeService = new Thread(tiesto);
+        threadList.add(timeService);
+        timeService.start();
+    }
+
+    private static void LoadIntelligence(JsonObject services, List<Thread> threadList) {
+        JsonArray intelligence = services.getAsJsonArray("intelligence");
+        for (int i = 0; i < intelligence.size(); i++){
+            List<MissionInfo> theList = new ArrayList<MissionInfo>();
+            JsonObject JJ = intelligence.get(i).getAsJsonObject();
+            JsonArray missions = JJ.getAsJsonArray("missions");
+            for (int j = 0; j < missions.size(); j++){
+                JsonObject misInfo = missions.get(j).getAsJsonObject();
+                JsonArray serials = misInfo.getAsJsonArray("serialAgentsNumber");
+                List<String> serialNumbers = new ArrayList<>();
+                for (int k = 0; k < serials.size(); k++){
+                    String serial = serials.get(k).getAsString();
+                    serialNumbers.add(serial);
+                }
+                int duration = misInfo.get("duration").getAsInt();
+                String gadget = misInfo.get("gadget").getAsString();
+                String name = misInfo.get("name").getAsString();
+                int expired = misInfo.get("timeExpired").getAsInt();
+                int issued = misInfo.get("timeIssued").getAsInt();
+
+                MissionInfo missionInfo = new MissionInfo(name, serialNumbers, gadget, issued, expired, duration);
+                theList.add(missionInfo);
+            }
+            Intelligence intel = new Intelligence(i, theList);
+            Thread Ekrueger = new Thread(intel);
+            threadList.add(Ekrueger);
+            Ekrueger.start();
+        }
+    }
+
+    private static void LoadQ(List<Thread> threadList) {
+        Thread q = new Thread(new Q());
+        threadList.add(q);
+        q.start();
+    }
+
+    private static void LoadMoneypenny(JsonObject services, List<Thread> threadList) {
         int cuantosMoneypenny = services.get("Moneypenny").getAsInt();
         for (int j = 0; j < cuantosMoneypenny; j++){
             Moneypenny Mp3 = new Moneypenny(j);
@@ -61,22 +107,17 @@ public class MI6Runner {
             threadList.add(fredi);
             fredi.start();
         }
-
-        Thread q = new Thread(new Q());
-        threadList.add(q);
-        q.start();
-
-        JsonArray intelligence = services.getAsJsonArray("intelligence");
-        List<MissionInfo> MI = new ArrayList<MissionInfo>();
-        for (int i = 0; i < intelligence.size(); i++){
-            JsonObject JJ = intelligence.get(i).getAsJsonObject();
-            JsonArray missions = JJ.getAsJsonArray("missions");
-            for (int j = 0; j < missions.size(); j++){
-                JsonObject misInfo = missions.get(j).getAsJsonObject();
-            }
-        }
     }
 
+    private static void loadM(JsonObject services, List<Thread> threadList) {
+        int cuantosM = services.get("M").getAsInt();
+        for (int i = 0; i < cuantosM; i++){
+            M mamasita = new M(i);
+            Thread fred = new Thread(mamasita);
+            threadList.add(fred);
+            fred.start();
+        }
+    }
 
 
     public static JsonObject Read (String file) {
