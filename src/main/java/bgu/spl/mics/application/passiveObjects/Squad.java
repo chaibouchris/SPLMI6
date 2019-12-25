@@ -1,6 +1,4 @@
 package bgu.spl.mics.application.passiveObjects;
-import bgu.spl.mics.MessageBroker;
-import bgu.spl.mics.MessageBrokerImpl;
 
 import java.util.List;
 import java.util.Map;
@@ -60,7 +58,7 @@ public class Squad {
 	 * @param time   milliseconds to sleep
 	 */
 	public void sendAgents(List<String> serials, int time){
-		// TODO Implement this
+
 	}
 
 	/**

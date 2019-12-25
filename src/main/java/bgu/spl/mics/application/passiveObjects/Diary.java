@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.passiveObjects;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -61,12 +62,13 @@ public class Diary {
 	 */
 	public void printToFile(String filename){
 		String output = reports.toString();
-		Gson gisi = new Gson();
-		try {
-			gisi.toJson(output, new FileWriter(filename));
+		Gson gisi = new GsonBuilder().setPrettyPrinting().create();
+		try (FileWriter amosOz = new FileWriter(filename)) {
+			gisi.toJson(reports, amosOz);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println(output);
 	}
 
 	/**

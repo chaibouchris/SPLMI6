@@ -59,6 +59,7 @@ public class MI6Runner {
         int time = services.get("time").getAsInt();
         TimeService tiesto = new TimeService(time);
         Thread timeService = new Thread(tiesto);
+        timeService.setName("TimeService");
         threadList.add(timeService);
         timeService.start();
     }
@@ -88,6 +89,7 @@ public class MI6Runner {
             }
             Intelligence intel = new Intelligence(i, theList);
             Thread Ekrueger = new Thread(intel);
+            Ekrueger.setName("Intelligence "+i);
             threadList.add(Ekrueger);
             Ekrueger.start();
         }
@@ -95,6 +97,7 @@ public class MI6Runner {
 
     private static void LoadQ(List<Thread> threadList) {
         Thread q = new Thread(new Q());
+        q.setName("Q");
         threadList.add(q);
         q.start();
     }
@@ -104,6 +107,7 @@ public class MI6Runner {
         for (int j = 0; j < cuantosMoneypenny; j++){
             Moneypenny Mp3 = new Moneypenny(j);
             Thread fredi = new Thread(Mp3);
+            fredi.setName("Moneypenny "+j);
             threadList.add(fredi);
             fredi.start();
         }
@@ -114,6 +118,7 @@ public class MI6Runner {
         for (int i = 0; i < cuantosM; i++){
             M mamasita = new M(i);
             Thread fred = new Thread(mamasita);
+            fred.setName("M "+i);
             threadList.add(fred);
             fred.start();
         }
