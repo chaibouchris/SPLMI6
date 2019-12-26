@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.subscribers;
 
+import bgu.spl.mics.Future;
 import bgu.spl.mics.MessageBrokerImpl;
 import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.AgentsAvailableEvent;
@@ -8,7 +9,9 @@ import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.myClasses.AgentsAvialableResult;
 import bgu.spl.mics.application.passiveObjects.Squad;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Only this type of Subscriber can access the squad.
@@ -42,9 +45,22 @@ public class Moneypenny extends Subscriber {
 		});
 
 		subscribeEvent(AgentsAvailableEvent.class, (E) -> {
+			int timeExpired = E.getTimeExpired();
 			List<String> serials = E.getSerials();
-			AgentsAvialableResult AAR = new AgentsAvialableResult(this.id, saqi.getAgents(serials),saqi.getAgentsNames(serials));
+			Boolean getAgents = saqi.getAgents(serials);
+			List<String> agentsNames = new ArrayList<>();
+			if (getAgents){
+				agentsNames = saqi.getAgentsNames(serials);
+			}
+
+			Future<Boolean> gadgetFuture = new Future<>();
+			AgentsAvialableResult AAR = new AgentsAvialableResult(this.id, getAgents, agentsNames, gadgetFuture);
 			complete(E, AAR);
+			Boolean gotGadget = gadgetFuture.get((timeExpired = currTick)*100, TimeUnit.MILLISECONDS);
+
+			if (gotGadget != null && gotGadget.booleanValue() == true && getAgents){
+				saqi.sendAgents(serials, E.getDuration());
+			} else saqi.releaseAgents(serials);
 		});
 
 	}

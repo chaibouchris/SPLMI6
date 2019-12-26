@@ -9,8 +9,10 @@ import bgu.spl.mics.application.myClasses.AgentsAvialableResult;
 import bgu.spl.mics.application.passiveObjects.Diary;
 import bgu.spl.mics.application.myClasses.GadgetAvialableResult;
 import bgu.spl.mics.application.passiveObjects.MissionInfo;
+import bgu.spl.mics.application.passiveObjects.Report;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * M handles ReadyEvent - fills a report and sends agents to mission.
@@ -45,58 +47,51 @@ public class M extends Subscriber {
 		subscribeEvent(MissionReceivedEvent.class, (E) -> {
 			anaFrank.incrementTotal();
 
-			MissionInfo MI = E.getMissionInfo();
-			SimplePublisher pubi = getSimplePublisher();
-			List<String> serials = MI.getSerialAgentsNumbers();
-			int duration = MI.getDuration();
+			AgentsAvailableEvent AAE = new AgentsAvailableEvent(E.getSerials(), E.getDuration(), E.getEndTime());
+			Future<AgentsAvialableResult> future = getSimplePublisher().sendEvent(AAE);
 
-			Future<AgentsAvialableResult> AAR = pubi.sendEvent(new AgentsAvailableEvent(serials));
-			if (AAR == null) {
-				MessageBrokerImpl.getInstance().unregister(this);
-				terminate();
-				return;
-			}
-			if (AAR.get() == null || !AAR.get().getResult()) {
-				return;
-			}
+			AgentsAvialableResult AAR = future.get((E.getEndTime() - currTick) * 100, TimeUnit.MILLISECONDS);
+			Future MgetGadget;
 
-			Future<GadgetAvialableResult> gadgetAvaiable = pubi.sendEvent(new GadgetAvailableEvent(MI.getGadget()));
-			if (gadgetAvaiable == null) {
-				MessageBrokerImpl.getInstance().unregister(this);
-				terminate();
-				return;
-			}
-			if (gadgetAvaiable.get() == null || !gadgetAvaiable.get().getResult()) {
-				ReleaseAgents(pubi, serials);
-				return;
-			}
+			if (AAR != null && AAR.getGetAgents()) {
+				GadgetAvailableEvent GAE = new GadgetAvailableEvent(E.getGadget(), currTick);
+				Future<Integer> gadgetF = getSimplePublisher().sendEvent(GAE);
+				Integer foundGadget = gadgetF.get((E.getEndTime() - currTick) * 100, TimeUnit.MILLISECONDS);
+				complete(GAE, foundGadget);
 
-			GadgetAvialableResult result = gadgetAvaiable.get();
-			if (result.getTime() > MI.getTimeExpired()) {
-				ReleaseAgents(pubi, serials);
-				return;
+				if (foundGadget != null && currTick <= E.getEndTime() && foundGadget != -1) {
+					MgetGadget = AAR.getGetGadget();
+					MgetGadget.resolve(true);
+					int qTime = gadgetF.get();
+					List<String> agentsName = AAR.getAgentsNames();
+					List<String> serials = E.getSerials();
+					int mPennyId = AAR.getMoneyPennyID();
+					writeReport(serials, E.getTimeIssued(), agentsName, qTime, mPennyId, E.getGadget());
+				} else if (AAR != null) {
+					MgetGadget = AAR.getGetGadget();
+					MgetGadget.resolve(false);
+				}//no agents avialable ot time expired
 			}
-
-			Future<Boolean> UTB = pubi.sendEvent(new UnleashTheBeastEvent(serials, duration));
-			if (UTB == null) {
-				ReleaseAgents(pubi, serials);
-				return;
-			}
-
-			complete(E, true);
-
+			complete(AAE, AAR);
 		});
+	}
+
+	private void writeReport(List<String> serials, int timeIssued, List<String> agentsName, int qtime, int MpID, String gadget){
+		Report toAdd = new Report();
+		toAdd.setQTime(qtime);
+		toAdd.setAgentsNames(agentsName);
+		toAdd.setTimeIssued(timeIssued);
+		toAdd.setGadgetName(gadget);
+		toAdd.setMoneypenny(MpID);
+		toAdd.setM(this.id);
+		toAdd.setMoneypenny(MpID);
+		toAdd.setTimeCreated(currTick);
+		toAdd.setAgentsSerialNumbersNumber(serials);
+		anaFrank.addReport(toAdd);
 	}
 
 	public void setCurrTick(int toSet) {
 		this.currTick = toSet;
-	}
-
-	private void ReleaseAgents(SimplePublisher pubi, List<String> serials) {
-		Future<Boolean> BB = pubi.sendEvent(new AboardMissionEvent(serials));
-		while (BB != null && BB.get() == null) {
-			BB = pubi.sendEvent(new AboardMissionEvent(serials));
-		}
 	}
 }
 

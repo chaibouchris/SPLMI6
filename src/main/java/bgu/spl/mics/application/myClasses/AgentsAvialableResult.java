@@ -1,21 +1,37 @@
 package bgu.spl.mics.application.myClasses;
 
+import bgu.spl.mics.Future;
+
 import java.util.List;
 
 public class AgentsAvialableResult {
 
     private  int MoneyPennyID;
-    private Boolean result;
+    private Boolean getAgents;
     private List<String> agentsNames;
+    private Future<Boolean> getGadget;
 
-    public AgentsAvialableResult(int MP, Boolean r, List<String> aN){
+    public AgentsAvialableResult(int MP, Boolean getAgents, List<String> aN, Future<Boolean> future){
         this.MoneyPennyID = MP;
-        this.result = r;
+        this.getAgents = getAgents;
         this.agentsNames = aN;
+        this.getGadget = future;
     }
 
-    public Boolean getResult(){
-        return result;
+
+    public int getMoneyPennyID() {
+        return MoneyPennyID;
     }
 
+    public Boolean getGetAgents() {
+        return getAgents;
+    }
+
+    public List<String> getAgentsNames() {
+        return agentsNames;
+    }
+
+    public Future<Boolean> getGetGadget() {
+        return getGadget;
+    }
 }
