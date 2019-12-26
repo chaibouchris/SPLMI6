@@ -126,7 +126,6 @@ public abstract class Subscriber extends RunnableSubPub {
             }
         }
         bejerano.unregister(this);
-
     }
 
 }

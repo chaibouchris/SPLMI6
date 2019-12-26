@@ -38,7 +38,6 @@ public class Moneypenny extends Subscriber {
 		subscribeBrod();
 		subscribeTerminateBrod();
 		subscribeAgentsAvialableEvent();
-
 	}
 
 	private void subscribeAgentsAvialableEvent() {
@@ -56,7 +55,7 @@ public class Moneypenny extends Subscriber {
 			complete(E, AAR);
 			Boolean gotGadget = gadgetFuture.get((timeExpired = currTick)*100, TimeUnit.MILLISECONDS);
 
-			if (gotGadget != null && gotGadget.booleanValue() == true && getAgents){
+			if (gotGadget != null && gotGadget && getAgents){
 				saqi.sendAgents(serials, E.getDuration());
 			} else saqi.releaseAgents(serials);
 		});

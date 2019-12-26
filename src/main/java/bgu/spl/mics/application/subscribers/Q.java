@@ -30,7 +30,10 @@ public class Q extends Subscriber {
 	protected void initialize() {
 		subscribeBrod();
 		subscribeTerminateBrod();
+		subscribeGadgetAvialableEvent();
+	}
 
+	private void subscribeGadgetAvialableEvent() {
 		subscribeEvent(GadgetAvailableEvent.class, (E) -> {
 			GadgetAvialableResult GAR = new GadgetAvialableResult(invi.getItem(E.getGadget()), currTick);
 			complete(E, GAR);

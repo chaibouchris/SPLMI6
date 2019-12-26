@@ -64,10 +64,10 @@ public class M extends Subscriber {
 					List<String> serials = E.getSerials();
 					int mPennyId = AAR.getMoneyPennyID();
 					writeReport(serials, E.getTimeIssued(), agentsName, qTime, mPennyId, E.getGadget());
-				} else if (AAR != null) {
+				} else {
 					MgetGadget = AAR.getGetGadget();
 					MgetGadget.resolve(false);
-				}//no agents avialable ot time expired
+				}//no agents avialable or time expired
 			}
 			complete(AAE, AAR);
 		});
