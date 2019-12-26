@@ -44,7 +44,6 @@ public class Q extends Subscriber {
 
 	private void subscribeTerminateBrod() {
 		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
-			MessageBrokerImpl.getInstance().unregister(this);
 			terminate();
 		});
 	}

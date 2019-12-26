@@ -123,6 +123,7 @@ public abstract class Subscriber extends RunnableSubPub {
                 callbackHashMap.get(myLovelyMission.getClass()).call(myLovelyMission);// do callback.
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                System.out.println(this.getName()+" interrupted");
             }
         }
         bejerano.unregister(this);
