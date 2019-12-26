@@ -48,11 +48,13 @@ public class Intelligence extends Subscriber {
 
 	private void subscribeBrod(SimplePublisher pubi) {
 		subscribeBroadcast(TickBroadcast.class, (E)->{
-			MissionInfo MI = theList.get(0);
 			setCurrTick(E.getTick());
-			if (currTick == MI.getTimeIssued()){
-				pubi.sendEvent(new MissionReceivedEvent(MI));
-				theList.remove(0);
+			if (!theList.isEmpty()) {
+				MissionInfo MI = theList.get(0);
+				if (currTick == MI.getTimeIssued()) {
+					pubi.sendEvent(new MissionReceivedEvent(MI));
+					theList.remove(0);
+				}
 			}
 		});
 	}

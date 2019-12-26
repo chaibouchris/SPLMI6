@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -103,7 +104,7 @@ public class Squad {
      * @return a list of the names of the agents with the specified serials.
      */
     public List<String> getAgentsNames(List<String> serials){
-    	List<String> agentsNames = null;
+    	List<String> agentsNames = new ArrayList<>();
     	for(String serialNums:serials) {
 			String name = agents.get(serialNums).getName();
 			agentsNames.add(name);
