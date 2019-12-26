@@ -35,8 +35,10 @@ public class Q extends Subscriber {
 
 	private void subscribeGadgetAvialableEvent() {
 		subscribeEvent(GadgetAvailableEvent.class, (E) -> {
-			GadgetAvialableResult GAR = new GadgetAvialableResult(invi.getItem(E.getGadget()), currTick);
-			complete(E, GAR);
+			boolean booli = invi.getItem(E.getGadget());
+			if (booli){
+				complete(E, currTick);
+			} else complete(E, -1);
 		});
 	}
 

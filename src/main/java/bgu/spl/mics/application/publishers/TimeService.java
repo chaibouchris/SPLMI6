@@ -49,5 +49,7 @@ public class TimeService extends Publisher {
 			}
 			currTick++;
 		}
+		TerminateBroadcast finito = new TerminateBroadcast();
+		getSimplePublisher().sendBroadcast(finito);
 	}
 }
