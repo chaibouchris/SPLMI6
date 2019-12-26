@@ -1,14 +1,10 @@
 package bgu.spl.mics.application.subscribers;
 
 import bgu.spl.mics.Future;
-import bgu.spl.mics.MessageBrokerImpl;
-import bgu.spl.mics.SimplePublisher;
 import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.myClasses.AgentsAvialableResult;
 import bgu.spl.mics.application.passiveObjects.Diary;
-import bgu.spl.mics.application.myClasses.GadgetAvialableResult;
-import bgu.spl.mics.application.passiveObjects.MissionInfo;
 import bgu.spl.mics.application.passiveObjects.Report;
 
 import java.util.List;
@@ -22,13 +18,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class M extends Subscriber {
 
-	private Diary anaFrank;
+	private Diary diaryOfJane;
 	private int id;
 	int currTick;
 
 	public M(int id) {
 		super("M");
-		anaFrank = Diary.getInstance();
+		diaryOfJane = Diary.getInstance();
 		this.id = id;
 		currTick = 0;
 	}
@@ -42,7 +38,7 @@ public class M extends Subscriber {
 
 	private void subscribeMissionRecieved() {
 		subscribeEvent(MissionReceivedEvent.class, (E) -> {
-			anaFrank.incrementTotal();
+			diaryOfJane.incrementTotal();
 
 			AgentsAvailableEvent AAE = new AgentsAvailableEvent(E.getSerials(), E.getDuration(), E.getEndTime());
 			Future<AgentsAvialableResult> future = getSimplePublisher().sendEvent(AAE);
@@ -63,7 +59,8 @@ public class M extends Subscriber {
 					List<String> agentsName = AAR.getAgentsNames();
 					List<String> serials = E.getSerials();
 					int mPennyId = AAR.getMoneyPennyID();
-					writeReport(serials, E.getTimeIssued(), agentsName, qTime, mPennyId, E.getGadget());
+					String nameOfMission = E.getMissionInfo().getMissionName();
+					writeReport(serials, E.getTimeIssued(), agentsName, qTime, mPennyId, E.getGadget(), nameOfMission);
 				} else {
 					MgetGadget = AAR.getGetGadget();
 					MgetGadget.resolve(false);
@@ -85,7 +82,7 @@ public class M extends Subscriber {
 		});
 	}
 
-	private void writeReport(List<String> serials, int timeIssued, List<String> agentsName, int qtime, int MpID, String gadget){
+	private void writeReport(List<String> serials, int timeIssued, List<String> agentsName, int qtime, int MpID, String gadget, String nameOfmission){
 		Report toAdd = new Report();
 		toAdd.setQTime(qtime);
 		toAdd.setAgentsNames(agentsName);
@@ -96,7 +93,8 @@ public class M extends Subscriber {
 		toAdd.setMoneypenny(MpID);
 		toAdd.setTimeCreated(currTick);
 		toAdd.setAgentsSerialNumbersNumber(serials);
-		anaFrank.addReport(toAdd);
+		toAdd.setMissionName(nameOfmission);
+		diaryOfJane.addReport(toAdd);
 	}
 
 	public void setCurrTick(int toSet) {
