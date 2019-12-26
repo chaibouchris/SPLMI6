@@ -35,15 +35,12 @@ public class M extends Subscriber {
 
 	@Override
 	protected void initialize() {
-		subscribeBroadcast(TickBroadcast.class, (B) -> {
-			setCurrTick(B.getTick());
-		});
+		subscribeBrod();
+		subscribeTerminateBrod();
+		subscribeMissionRecieved();
+	}
 
-		subscribeBroadcast(TerminateBroadcast.class, (TB) -> {
-			MessageBrokerImpl.getInstance().unregister(this);
-			terminate();
-		});
-
+	private void subscribeMissionRecieved() {
 		subscribeEvent(MissionReceivedEvent.class, (E) -> {
 			anaFrank.incrementTotal();
 
@@ -73,6 +70,19 @@ public class M extends Subscriber {
 				}//no agents avialable ot time expired
 			}
 			complete(AAE, AAR);
+		});
+	}
+
+	private void subscribeTerminateBrod() {
+		subscribeBroadcast(TerminateBroadcast.class, (TB) -> {
+			MessageBrokerImpl.getInstance().unregister(this);
+			terminate();
+		});
+	}
+
+	private void subscribeBrod() {
+		subscribeBroadcast(TickBroadcast.class, (B) -> {
+			setCurrTick(B.getTick());
 		});
 	}
 

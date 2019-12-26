@@ -35,15 +35,13 @@ public class Moneypenny extends Subscriber {
 
 	@Override
 	protected void initialize() {
-		subscribeBroadcast(TickBroadcast.class, (B) ->{
-			setCurrTick(B.getTick());
-		});
+		subscribeBrod();
+		subscribeTerminateBrod();
+		subscribeAgentsAvialableEvent();
 
-		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
-			MessageBrokerImpl.getInstance().unregister(this);
-			terminate();
-		});
+	}
 
+	private void subscribeAgentsAvialableEvent() {
 		subscribeEvent(AgentsAvailableEvent.class, (E) -> {
 			int timeExpired = E.getTimeExpired();
 			List<String> serials = E.getSerials();
@@ -62,7 +60,19 @@ public class Moneypenny extends Subscriber {
 				saqi.sendAgents(serials, E.getDuration());
 			} else saqi.releaseAgents(serials);
 		});
+	}
 
+	private void subscribeTerminateBrod() {
+		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
+			MessageBrokerImpl.getInstance().unregister(this);
+			terminate();
+		});
+	}
+
+	private void subscribeBrod() {
+		subscribeBroadcast(TickBroadcast.class, (B) ->{
+			setCurrTick(B.getTick());
+		});
 	}
 
 	public void setCurrTick(int toSet){

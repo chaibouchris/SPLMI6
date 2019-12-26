@@ -36,7 +36,18 @@ public class Intelligence extends Subscriber {
 	@Override
 	protected void initialize() {
 		SimplePublisher pubi = getSimplePublisher();
+		subscribeBrod(pubi);
+		subscribeTerminateBrod();
+	}
 
+	private void subscribeTerminateBrod() {
+		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
+			MessageBrokerImpl.getInstance().unregister(this);
+			terminate();
+		});
+	}
+
+	private void subscribeBrod(SimplePublisher pubi) {
 		subscribeBroadcast(TickBroadcast.class, (E)->{
 			MissionInfo MI = theList.get(0);
 			setCurrTick(E.getTick());
@@ -44,11 +55,6 @@ public class Intelligence extends Subscriber {
 				pubi.sendEvent(new MissionReceivedEvent(MI));
 				theList.remove(0);
 			}
-		});
-
-		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
-			MessageBrokerImpl.getInstance().unregister(this);
-			terminate();
 		});
 	}
 

@@ -28,18 +28,25 @@ public class Q extends Subscriber {
 
 	@Override
 	protected void initialize() {
-		subscribeBroadcast(TickBroadcast.class, (B) ->{
-			setCurrTick(B.getTick());
-		});
-
-		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
-			MessageBrokerImpl.getInstance().unregister(this);
-			terminate();
-		});
+		subscribeBrod();
+		subscribeTerminateBrod();
 
 		subscribeEvent(GadgetAvailableEvent.class, (E) -> {
 			GadgetAvialableResult GAR = new GadgetAvialableResult(invi.getItem(E.getGadget()), currTick);
 			complete(E, GAR);
+		});
+	}
+
+	private void subscribeTerminateBrod() {
+		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
+			MessageBrokerImpl.getInstance().unregister(this);
+			terminate();
+		});
+	}
+
+	private void subscribeBrod() {
+		subscribeBroadcast(TickBroadcast.class, (B) ->{
+			setCurrTick(B.getTick());
 		});
 	}
 
