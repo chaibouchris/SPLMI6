@@ -17,6 +17,7 @@ public class LoadLatch {
     public void start(){
         for (Thread thread: threadList){
             thread.start();
+            System.out.println(thread.getName()+" start");
         }
         try {
             latchi.await();
@@ -25,6 +26,7 @@ public class LoadLatch {
         }
 
         timeService.start();
+        System.out.println("timeService start");
     }
 
     public static void CountdownLatch(){

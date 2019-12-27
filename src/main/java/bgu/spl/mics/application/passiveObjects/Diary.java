@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -61,10 +62,10 @@ public class Diary {
 	 * This method is called by the main method in order to generate the output.
 	 */
 	public void printToFile(String filename){
-		Gson gisi = new GsonBuilder().setPrettyPrinting().create();
+		Gson gisi = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).setPrettyPrinting().create();
+		String output = gisi.toJson(Diary.getInstance());
 		try (FileWriter amosOz = new FileWriter(filename)) {
-			gisi.toJson(reports, amosOz);
-			gisi.toJson(total, amosOz);
+			amosOz.write(output);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

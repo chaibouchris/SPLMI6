@@ -53,8 +53,8 @@ public class Squad {
 			if(this.agents.containsKey(x)){
 				agents.get(x).release();
 			}
-			notifyAll();
 		}
+		notifyAll();
 	}
 
 	/**

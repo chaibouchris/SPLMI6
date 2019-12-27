@@ -84,18 +84,20 @@ public class MessageBrokerImpl implements MessageBroker {
 	public <T> Future<T> sendEvent(Event<T> e) {
 		BlockingQueue<Subscriber> queueSubs = MessageSupPubMap.get(e.getClass());
 		Future<T> send = new Future<>();
-		try {
-			if (queueSubs == null)
-				return null;
-			eventFutureMap.put(e, send);
-			Subscriber sub = queueSubs.remove();
-			BlockingQueue<Message> Qregister = subscriberRegisterMap.get(sub);
-			Qregister.add(e);
-			queueSubs.add(sub);
-		} catch (Exception excep){
-			excep.printStackTrace();
+		synchronized (queueSubs) {
+			try {
+				if (queueSubs == null)
+					return null;
+				eventFutureMap.put(e, send);
+				Subscriber sub = queueSubs.remove();
+				BlockingQueue<Message> Qregister = subscriberRegisterMap.get(sub);
+				Qregister.add(e);
+				queueSubs.add(sub);
+			} catch (Exception excep) {
+				excep.printStackTrace();
+			}
+			return send;
 		}
-		return send;
 	}
 
 	@Override
