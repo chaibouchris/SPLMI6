@@ -52,7 +52,7 @@ public class Moneypenny extends Subscriber {
 			Future<Boolean> gadgetFuture = new Future<>();
 			AgentsAvialableResult AAR = new AgentsAvialableResult(this.id, getAgents, agentsNames, gadgetFuture);
 			complete(E, AAR);
-			Boolean gotGadget = gadgetFuture.get((timeExpired = currTick)*100, TimeUnit.MILLISECONDS);
+			Boolean gotGadget = gadgetFuture.get((timeExpired - currTick)*100, TimeUnit.MILLISECONDS);
 
 			if (gotGadget != null && gotGadget && getAgents){
 				saqi.sendAgents(serials, E.getDuration());

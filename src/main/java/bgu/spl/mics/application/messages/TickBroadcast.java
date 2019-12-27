@@ -12,4 +12,7 @@ private int tick;
     public int getTick() {
         return tick;
     }
+    public void SetTick(int tick){
+        this.tick = tick;
+    }
 }

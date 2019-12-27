@@ -54,6 +54,7 @@ public class M extends Subscriber {
 				System.out.println(Thread.currentThread().getName()+" send gadgetAvialable");
 				Integer foundGadget = gadgetF.get(timeOut , TimeUnit.MILLISECONDS);
 				complete(GAE, foundGadget);
+				System.out.println(this.getName()+id +"complete event");
 
 				if (foundGadget != null && currTick <= E.getExpiredTime() && foundGadget != -1) {
 					MgetGadget = AAR.getGetGadget();

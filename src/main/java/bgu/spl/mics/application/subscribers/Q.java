@@ -38,7 +38,11 @@ public class Q extends Subscriber {
 			boolean booli = invi.getItem(E.getGadget());
 			if (booli){
 				complete(E, currTick);
-			} else complete(E, -1);
+				System.out.println("Q send the gadget");
+			} else{
+				complete(E, -1);
+				System.out.println("Q dont have the gadget");
+			}
 		});
 	}
 

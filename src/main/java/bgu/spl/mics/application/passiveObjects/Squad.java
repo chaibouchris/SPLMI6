@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.passiveObjects;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,13 +49,13 @@ public class Squad {
 	/**
 	 * Releases agents.
 	 */
-	public synchronized void releaseAgents(List<String> serials){
+	public void releaseAgents(List<String> serials){
+		Collections.sort(serials);
 		for (String x:serials) {
 			if(this.agents.containsKey(x)){
 				agents.get(x).release();
 			}
 		}
-		notifyAll();
 	}
 
 	/**
@@ -75,30 +76,20 @@ public class Squad {
 	 * @param serials   the serial numbers of the agents
 	 * @return ‘false’ if an agent of serialNumber ‘serial’ is missing, and ‘true’ otherwise
 	 */
-	public synchronized boolean getAgents(List<String> serials){
+	public boolean getAgents(List<String> serials){
+		Collections.sort(serials);
 		boolean everybodyHere = true;// if some one is missing then i want to acqurie everbody else and return true.
 		for (String x: serials) {
-			if (this.agents.containsKey(x)) {
-				if (this.agents.get(x).isAvailable()) {
-					this.agents.get(x).acquire();
-				}
-				else {
-				while (!this.agents.get(x).isAvailable()) {
-					try {
-						System.out.println(Thread.currentThread().getName()+"is wait");
-						wait();// wait until agent is available
-					} catch (InterruptedException e) {
-						Thread.currentThread().interrupt();
-						System.out.println("Thread interrupt");
-					}
-				}
-				this.agents.get(x).acquire();
+			everybodyHere = this.agents.containsKey(x);
+			if (!everybodyHere)
+				break;
+		}
+		if (everybodyHere) {
+			for (String x : serials) {
+				agents.get(x).acquire();
 			}
 		}
-			else { // agent not in squad
-				everybodyHere = false;
-			}
-		}
+
 		return everybodyHere;
 	}
 

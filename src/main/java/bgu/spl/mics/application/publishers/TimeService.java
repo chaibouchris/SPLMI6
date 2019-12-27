@@ -1,14 +1,10 @@
 package bgu.spl.mics.application.publishers;
 
 import bgu.spl.mics.Publisher;
-import bgu.spl.mics.SimplePublisher;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
 
 import bgu.spl.mics.application.messages.TickBroadcast;
 
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 
@@ -47,10 +43,10 @@ public class TimeService extends Publisher {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			System.out.println(currTick);
 			currTick++;
 		}
 		TerminateBroadcast finito = new TerminateBroadcast();
-		System.out.println("timeservice send terminate");
 		getSimplePublisher().sendBroadcast(finito);
 	}
 }
