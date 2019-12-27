@@ -40,19 +40,20 @@ public class M extends Subscriber {
 		subscribeEvent(MissionReceivedEvent.class, (E) -> {
 			diaryOfJane.incrementTotal();
 
-			AgentsAvailableEvent AAE = new AgentsAvailableEvent(E.getSerials(), E.getDuration(), E.getEndTime());
+			AgentsAvailableEvent AAE = new AgentsAvailableEvent(E.getSerials(), E.getDuration(), E.getExpiredTime());
 			Future<AgentsAvialableResult> future = getSimplePublisher().sendEvent(AAE);
 
-			AgentsAvialableResult AAR = future.get((E.getEndTime() - currTick) * 100, TimeUnit.MILLISECONDS);
+			long timeOut = (E.getExpiredTime() - currTick)*100;
+			AgentsAvialableResult AAR = future.get(timeOut , TimeUnit.MILLISECONDS);
 			Future MgetGadget;
 
 			if (AAR != null && AAR.getGetAgents()) {
 				GadgetAvailableEvent GAE = new GadgetAvailableEvent(E.getGadget(), currTick);
 				Future<Integer> gadgetF = getSimplePublisher().sendEvent(GAE);
-				Integer foundGadget = gadgetF.get((E.getEndTime() - currTick) * 100, TimeUnit.MILLISECONDS);
+				Integer foundGadget = gadgetF.get(timeOut , TimeUnit.MILLISECONDS);
 				complete(GAE, foundGadget);
 
-				if (foundGadget != null && currTick <= E.getEndTime() && foundGadget != -1) {
+				if (foundGadget != null && currTick <= E.getExpiredTime() && foundGadget != -1) {
 					MgetGadget = AAR.getGetGadget();
 					MgetGadget.resolve(true);
 					int qTime = gadgetF.get();

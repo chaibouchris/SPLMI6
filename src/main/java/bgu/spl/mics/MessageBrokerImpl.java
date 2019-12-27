@@ -14,7 +14,7 @@ public class MessageBrokerImpl implements MessageBroker {
 
     // map of events and future.
 	private ConcurrentHashMap<Event, Future> eventFutureMap;
-	// sub and the missions he toke.
+	// subscriber and the missions he toke.
 	private ConcurrentHashMap<Subscriber, BlockingQueue<Message>> subscriberRegisterMap;
 	// topic and its subs.
 	private ConcurrentHashMap<Class<? extends Message>, LinkedBlockingQueue<Subscriber>> MessageSupPubMap;

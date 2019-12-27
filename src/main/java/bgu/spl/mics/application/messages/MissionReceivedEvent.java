@@ -22,7 +22,7 @@ public class MissionReceivedEvent implements Event<Boolean> {
         return this.getMissionInfo().getDuration();
     }
 
-    public int getEndTime(){
+    public int getExpiredTime(){
         return this.getMissionInfo().getTimeExpired();
     }
 
