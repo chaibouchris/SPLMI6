@@ -42,6 +42,7 @@ public class M extends Subscriber {
 
 			AgentsAvailableEvent AAE = new AgentsAvailableEvent(E.getSerials(), E.getDuration(), E.getExpiredTime());
 			Future<AgentsAvialableResult> future = getSimplePublisher().sendEvent(AAE);
+			System.out.println(Thread.currentThread().getName()+" send agentAvialable");
 
 			long timeOut = (E.getExpiredTime() - currTick)*100;
 			AgentsAvialableResult AAR = future.get(timeOut , TimeUnit.MILLISECONDS);
@@ -50,6 +51,7 @@ public class M extends Subscriber {
 			if (AAR != null && AAR.getGetAgents()) {
 				GadgetAvailableEvent GAE = new GadgetAvailableEvent(E.getGadget(), currTick);
 				Future<Integer> gadgetF = getSimplePublisher().sendEvent(GAE);
+				System.out.println(Thread.currentThread().getName()+" send gadgetAvialable");
 				Integer foundGadget = gadgetF.get(timeOut , TimeUnit.MILLISECONDS);
 				complete(GAE, foundGadget);
 
@@ -74,6 +76,7 @@ public class M extends Subscriber {
 	private void subscribeTerminateBrod() {
 		subscribeBroadcast(TerminateBroadcast.class, (TB) -> {
 			terminate();
+			System.out.println(this.getName()+id+"unregister");
 		});
 	}
 

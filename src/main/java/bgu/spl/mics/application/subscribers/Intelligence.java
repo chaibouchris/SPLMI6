@@ -43,6 +43,7 @@ public class Intelligence extends Subscriber {
 	private void subscribeTerminateBrod() {
 		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
 			terminate();
+			System.out.println(this.getName()+id+"unregister");
 		});
 	}
 
@@ -53,6 +54,7 @@ public class Intelligence extends Subscriber {
 				MissionInfo MI = theList.get(0);
 				if (currTick == MI.getTimeIssued()) {
 					pubi.sendEvent(new MissionReceivedEvent(MI));
+					System.out.println(Thread.currentThread().getName()+" send Event "+MI.getMissionName());
 					theList.remove(0);
 				}
 			}

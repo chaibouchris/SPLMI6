@@ -45,6 +45,7 @@ public class Q extends Subscriber {
 	private void subscribeTerminateBrod() {
 		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
 			terminate();
+			System.out.println(this.getName()+"unregister");
 		});
 	}
 

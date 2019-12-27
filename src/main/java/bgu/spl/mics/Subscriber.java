@@ -1,6 +1,7 @@
 package bgu.spl.mics;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static bgu.spl.mics.application.myClasses.LoadLatch.CountdownLatch;
 
@@ -127,6 +128,10 @@ public abstract class Subscriber extends RunnableSubPub {
             }
         }
         bejerano.unregister(this);
+    }
+
+    public void whenTerminateCompleteAll(){
+        bejerano.whenTerminateCompleteAll();
     }
 
 }

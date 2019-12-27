@@ -49,7 +49,6 @@ public class Moneypenny extends Subscriber {
 			if (getAgents){
 				agentsNames = saqi.getAgentsNames(serials);
 			}
-
 			Future<Boolean> gadgetFuture = new Future<>();
 			AgentsAvialableResult AAR = new AgentsAvialableResult(this.id, getAgents, agentsNames, gadgetFuture);
 			complete(E, AAR);
@@ -57,13 +56,16 @@ public class Moneypenny extends Subscriber {
 
 			if (gotGadget != null && gotGadget && getAgents){
 				saqi.sendAgents(serials, E.getDuration());
+				System.out.println(Thread.currentThread().getName()+" send agents "+saqi.getAgentsNames(serials));
 			} else saqi.releaseAgents(serials);
 		});
 	}
 
 	private void subscribeTerminateBrod() {
 		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
+			whenTerminateCompleteAll();
 			terminate();
+			System.out.println(this.getName()+id+"unregister");
 		});
 	}
 

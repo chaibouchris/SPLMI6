@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Passive data-object representing a information about an agent in MI6.
@@ -14,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Squad {
 
 	private Map<String, Agent> agents;
+	private AtomicBoolean notTerminate = new AtomicBoolean(true);
 
 	/**
 	 * Retrieves the single instance of this class.
@@ -51,6 +53,7 @@ public class Squad {
 			if(this.agents.containsKey(x)){
 				agents.get(x).release();
 			}
+			notifyAll();
 		}
 	}
 
@@ -82,6 +85,7 @@ public class Squad {
 				else {
 				while (!this.agents.get(x).isAvailable()) {
 					try {
+						System.out.println(Thread.currentThread().getName()+"is wait");
 						wait();// wait until agent is available
 					} catch (InterruptedException e) {
 						Thread.currentThread().interrupt();

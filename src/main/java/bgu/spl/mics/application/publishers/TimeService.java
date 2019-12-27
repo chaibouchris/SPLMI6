@@ -50,6 +50,7 @@ public class TimeService extends Publisher {
 			currTick++;
 		}
 		TerminateBroadcast finito = new TerminateBroadcast();
+		System.out.println("timeservice send terminate");
 		getSimplePublisher().sendBroadcast(finito);
 	}
 }

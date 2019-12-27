@@ -61,14 +61,13 @@ public class Diary {
 	 * This method is called by the main method in order to generate the output.
 	 */
 	public void printToFile(String filename){
-		String output = reports.toString();
 		Gson gisi = new GsonBuilder().setPrettyPrinting().create();
 		try (FileWriter amosOz = new FileWriter(filename)) {
 			gisi.toJson(reports, amosOz);
+			gisi.toJson(total, amosOz);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(output);
 	}
 
 	/**

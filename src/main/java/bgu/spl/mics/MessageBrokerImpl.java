@@ -14,7 +14,7 @@ public class MessageBrokerImpl implements MessageBroker {
 
     // map of events and future.
 	private ConcurrentHashMap<Event, Future> eventFutureMap;
-	// subscriber and the missions he toke.
+	// subscribers and the missions he toke.
 	private ConcurrentHashMap<Subscriber, BlockingQueue<Message>> subscriberRegisterMap;
 	// topic and its subs.
 	private ConcurrentHashMap<Class<? extends Message>, LinkedBlockingQueue<Subscriber>> MessageSupPubMap;
@@ -125,4 +125,10 @@ public class MessageBrokerImpl implements MessageBroker {
 		return Q.take();
 	}
 
+	public void whenTerminateCompleteAll() {
+		for (Map.Entry<Event, Future> iter : eventFutureMap.entrySet()) {
+			iter.getValue().resolve(null);
+		}
+	}
 }
+

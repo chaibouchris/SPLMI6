@@ -24,7 +24,7 @@ import java.util.concurrent.CountDownLatch;
 public class MI6Runner {
 
     public static void main(String[] args) {
-        String path = "input201[3].json";
+        String path = "SPL201test1.json";
         List<Thread> fredList = new ArrayList<>();
         try {
             BufferedReader Yoram = new BufferedReader(new FileReader(path));
