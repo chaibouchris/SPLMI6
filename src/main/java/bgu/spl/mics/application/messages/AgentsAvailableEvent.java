@@ -1,11 +1,11 @@
 package bgu.spl.mics.application.messages;
 
 import bgu.spl.mics.Event;
-import bgu.spl.mics.application.myClasses.AgentsAvialableResult;
+import bgu.spl.mics.application.special.AgentsAvailableResult;
 
 import java.util.List;
 
-public class AgentsAvailableEvent implements Event<AgentsAvialableResult> {
+public class AgentsAvailableEvent implements Event<AgentsAvailableResult> {
 
     private List<String> serials;
     private int duration;

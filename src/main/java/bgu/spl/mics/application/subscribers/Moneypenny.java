@@ -5,14 +5,12 @@ import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.AgentsAvailableEvent;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
-import bgu.spl.mics.application.myClasses.AgentsAvialableResult;
-import bgu.spl.mics.application.passiveObjects.Agent;
+import bgu.spl.mics.application.special.AgentsAvailableResult;
 import bgu.spl.mics.application.passiveObjects.Squad;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,50 +25,50 @@ public class Moneypenny extends Subscriber {
 	private Squad saqi;
 	private int id;
 	private int currTick;
-	private List<String> ser;
+	private List<String> agentsInService;
+
 	public Moneypenny(int id) {
 		super("MoneyPenny");
 		saqi = Squad.getInstance();
 		this.id = id;
 		this.currTick = 0;
-		ser=new LinkedList<>();
+		agentsInService = new LinkedList<>();
 	}
 
 	@Override
 	protected void initialize() {
-		subscribeBrod();
-		subscribeTerminateBrod();
-		subscribeAgentsAvialableEvent();
+		subscribeBrod();//subscribe himself for the broadcasts
+		subscribeTerminateBrod();//subscribe himself for the terminate broadcasts
+		subscribeAgentsAvailableEvent();//subscribe himself for agents available event
 	}
 
-	private void subscribeAgentsAvialableEvent() {
+	private void subscribeAgentsAvailableEvent() {
 		subscribeEvent(AgentsAvailableEvent.class, (E) -> {
 			int timeExpired = E.getTimeExpired();
 			List<String> serials = E.getSerials();
-			ser.addAll(serials);
+			agentsInService.addAll(serials);//to know what agents im using now
 			Boolean getAgents = saqi.getAgents(serials);
 			List<String> agentsNames = new ArrayList<>();
 			if (getAgents){
-				agentsNames = saqi.getAgentsNames(serials);
+				agentsNames = saqi.getAgentsNames(serials);//only need the names when i got them
 			}
-			Future<Boolean> gadgetFuture = new Future<>();
-			AgentsAvialableResult AAR = new AgentsAvialableResult(this.id, getAgents, agentsNames, gadgetFuture);
-			complete(E, AAR);
-			Boolean gotGadget = gadgetFuture.get((timeExpired - currTick+1)*100, TimeUnit.MILLISECONDS);
+			Future<Boolean> gadgetFuture = new Future<>();//the future we use for the gadget
+			AgentsAvailableResult AAR = new AgentsAvailableResult(this.id, getAgents, agentsNames, gadgetFuture);
+			complete(E, AAR);//save the id, if i got the agents, the name of them and the future of thr gadget
+			Boolean isGotGadget = gadgetFuture.get((timeExpired - currTick + 1)*100, TimeUnit.MILLISECONDS);
 
-			if (gotGadget != null && gotGadget && getAgents){
-				saqi.sendAgents(serials, E.getDuration());
-				System.out.println(Thread.currentThread().getName()+" send agents "+saqi.getAgentsNames(serials));
-			} else saqi.releaseAgents(serials);
+			if (isGotGadget != null && isGotGadget && getAgents){
+				saqi.sendAgents(serials, E.getDuration());//we send them if everything like we want
+			} else {
+				saqi.releaseAgents(serials);//release them because something is not ok
+			}
 		});
 	}
 
 	private void subscribeTerminateBrod() {
 		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
-			whenTerminateCompleteAll();
-			saqi.releaseAgents(ser);
+			saqi.releaseAgents(agentsInService);
 			terminate();
-			System.out.println(this.getName()+id+"unregister");
 		});
 	}
 

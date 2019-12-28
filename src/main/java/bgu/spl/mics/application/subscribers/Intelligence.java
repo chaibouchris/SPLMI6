@@ -1,6 +1,5 @@
 package bgu.spl.mics.application.subscribers;
 
-import bgu.spl.mics.MessageBrokerImpl;
 import bgu.spl.mics.SimplePublisher;
 import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.MissionReceivedEvent;
@@ -8,7 +7,6 @@ import bgu.spl.mics.application.messages.TerminateBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.MissionInfo;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -30,20 +28,20 @@ public class Intelligence extends Subscriber {
 		this.id = id;
 		currTick = 0;
 		this.theList = MisList;
-		sortByTimeIssued();
+		sortByTimeIssued();//we want that they will be from the first time issued to the last
 	}
+
 
 	@Override
 	protected void initialize() {
 		SimplePublisher pubi = getSimplePublisher();
-		subscribeBrod(pubi);
-		subscribeTerminateBrod();
+		subscribeBrod(pubi);//subscribe himself for broadcasts
+		subscribeTerminateBrod();//subscribe himself for the terminate broadcast
 	}
 
 	private void subscribeTerminateBrod() {
 		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
 			terminate();
-			System.out.println(this.getName()+id+"unregister");
 		});
 	}
 
@@ -51,17 +49,18 @@ public class Intelligence extends Subscriber {
 		subscribeBroadcast(TickBroadcast.class, (E)->{
 			setCurrTick(E.getTick());
 			if (!theList.isEmpty()) {
-				MissionInfo MI = theList.get(0);
-				if (currTick == MI.getTimeIssued()) {
-					pubi.sendEvent(new MissionReceivedEvent(MI));
-					System.out.println(Thread.currentThread().getName()+" send Event "+MI.getMissionName());
-					theList.remove(0);
+				MissionInfo MI = theList.get(0);//get the first mission in the list
+				while (currTick == MI.getTimeIssued() && !theList.isEmpty()) {//want to send all the missions with this time issued
+					pubi.sendEvent(new MissionReceivedEvent(MI));//send mission receive event
+					theList.remove(0);//remove the mission from the list
+					if (!theList.isEmpty())
+					MI = theList.get(0);//if we have more missions we check if it we need to send it now
 				}
 			}
 		});
 	}
 
-	private void sortByTimeIssued(){
+	private void sortByTimeIssued(){//sort the missions form first time issued to last
 		theList.sort(Comparator.comparingInt(MissionInfo::getTimeIssued));
 	}
 

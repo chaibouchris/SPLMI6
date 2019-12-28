@@ -1,11 +1,9 @@
 package bgu.spl.mics.application.subscribers;
 
-import bgu.spl.mics.MessageBrokerImpl;
 import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.GadgetAvailableEvent;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
-import bgu.spl.mics.application.myClasses.GadgetAvialableResult;
 import bgu.spl.mics.application.passiveObjects.Inventory;
 
 /**
@@ -28,20 +26,18 @@ public class Q extends Subscriber {
 
 	@Override
 	protected void initialize() {
-		subscribeBrod();
-		subscribeTerminateBrod();
-		subscribeGadgetAvialableEvent();
+		subscribeBrod();//subscribe himself for the broadcasts
+		subscribeTerminateBrod();//subscribe himself for the terminate broadcast
+		subscribeGadgetAvailableEvent();// subscribe himself for the gadget avialable event
 	}
 
-	private void subscribeGadgetAvialableEvent() {
+	private void subscribeGadgetAvailableEvent() {
 		subscribeEvent(GadgetAvailableEvent.class, (E) -> {
 			boolean booli = invi.getItem(E.getGadget());
 			if (booli){
-				complete(E, currTick);
-				System.out.println("Q send the gadget");
+				complete(E, currTick);//with the time he get it
 			} else{
-				complete(E, -1);
-				System.out.println("Q dont have the gadget");
+				complete(E, -1);//with -1 if not get it
 			}
 		});
 	}
@@ -49,7 +45,6 @@ public class Q extends Subscriber {
 	private void subscribeTerminateBrod() {
 		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
 			terminate();
-			System.out.println(this.getName()+"unregister");
 		});
 	}
 

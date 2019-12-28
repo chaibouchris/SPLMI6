@@ -40,9 +40,6 @@ public class Diary {
 		return DiaryHolder.instance;
 	}
 
-	public List<Report> getReports() {
-		return reports;
-	}
 
 	/**
 	 * adds a report to the diary
@@ -80,6 +77,9 @@ public class Diary {
 		return total.get();
 	}
 
+	/**
+	 * increase the total number of received missions (executed / aborted).
+	 */
 	public void incrementTotal(){
 		this.total.incrementAndGet();
 	}

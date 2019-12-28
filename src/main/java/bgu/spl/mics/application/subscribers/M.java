@@ -3,7 +3,7 @@ package bgu.spl.mics.application.subscribers;
 import bgu.spl.mics.Future;
 import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.*;
-import bgu.spl.mics.application.myClasses.AgentsAvialableResult;
+import bgu.spl.mics.application.special.AgentsAvailableResult;
 import bgu.spl.mics.application.passiveObjects.Diary;
 import bgu.spl.mics.application.passiveObjects.Report;
 
@@ -31,43 +31,38 @@ public class M extends Subscriber {
 
 	@Override
 	protected void initialize() {
-		subscribeBrod();
-		subscribeTerminateBrod();
-		subscribeMissionRecieved();
+		subscribeBrod();//subscribe himself for the broadcasts
+		subscribeTerminateBrod();//subscribe himself for the terminate broadcasts
+		subscribeMissionReceived();//subscribe himself for the mission received
 	}
 
-	private void subscribeMissionRecieved() {
+	private void subscribeMissionReceived() {
 		subscribeEvent(MissionReceivedEvent.class, (E) -> {
-			diaryOfJane.incrementTotal();
-
+			diaryOfJane.incrementTotal();//add it to the diary
 			AgentsAvailableEvent AAE = new AgentsAvailableEvent(E.getSerials(), E.getDuration(), E.getExpiredTime());
-			Future<AgentsAvialableResult> future = getSimplePublisher().sendEvent(AAE);
-			System.out.println(Thread.currentThread().getName()+" send agentAvialable");
-
-			long timeOut = (E.getExpiredTime() - currTick + 1)*100;
-			AgentsAvialableResult AAR = future.get(timeOut , TimeUnit.MILLISECONDS);
-			Future MgetGadget;
-
-			if (AAR != null && AAR.getGetAgents()) {
+			Future<AgentsAvailableResult> futureAAR = getSimplePublisher().sendEvent(AAE);
+			//send  agent available event (that will deliver to moneypenny)
+			int expiredTime = E.getExpiredTime();
+			AgentsAvailableResult AAR = futureAAR.get((expiredTime - currTick + 1)*100 , TimeUnit.MILLISECONDS);
+			Future futureMgotTheGadget;
+			if (AAR != null && AAR.weGotTheAgents()) {//enter if we get the agents
 				GadgetAvailableEvent GAE = new GadgetAvailableEvent(E.getGadget(), currTick);
-				Future<Integer> gadgetF = getSimplePublisher().sendEvent(GAE);
-				System.out.println(Thread.currentThread().getName()+" send gadgetAvialable");
-				Integer foundGadget = gadgetF.get(timeOut , TimeUnit.MILLISECONDS);
-				complete(GAE, foundGadget);
-				System.out.println(this.getName()+id +"complete event");
+				Future<Integer> gadgetFuture = getSimplePublisher().sendEvent(GAE);//send gadget available event
+				Integer foundGadget = gadgetFuture.get((expiredTime - currTick + 1)*100 , TimeUnit.MILLISECONDS);
+				complete(GAE, foundGadget);//the event with the result that give the time we got the gadget/-1 if we dont get it
 
-				if (foundGadget != null && currTick <= E.getExpiredTime() && foundGadget != -1) {
-					MgetGadget = AAR.getGetGadget();
-					MgetGadget.resolve(true);
-					int qTime = gadgetF.get();
+				if (foundGadget != null && currTick <= expiredTime && foundGadget != -1) {//if we got the gadget and the time isn't expired
+					futureMgotTheGadget = AAR.weGotTheGadget();
+					futureMgotTheGadget.resolve(true);
+					int qTime = gadgetFuture.get();//when q get the gadget
 					List<String> agentsName = AAR.getAgentsNames();
 					List<String> serials = E.getSerials();
 					int mPennyId = AAR.getMoneyPennyID();
 					String nameOfMission = E.getMissionInfo().getMissionName();
 					writeReport(serials, E.getTimeIssued(), agentsName, qTime, mPennyId, E.getGadget(), nameOfMission);
 				} else {
-					MgetGadget = AAR.getGetGadget();
-					MgetGadget.resolve(false);
+					futureMgotTheGadget = AAR.weGotTheGadget();
+					futureMgotTheGadget.resolve(false);
 				}//no agents avialable or time expired
 			}
 			complete(AAE, AAR);
@@ -77,7 +72,6 @@ public class M extends Subscriber {
 	private void subscribeTerminateBrod() {
 		subscribeBroadcast(TerminateBroadcast.class, (TB) -> {
 			terminate();
-			System.out.println(this.getName()+id+"unregister");
 		});
 	}
 

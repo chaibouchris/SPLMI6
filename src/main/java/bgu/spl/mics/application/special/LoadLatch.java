@@ -1,4 +1,4 @@
-package bgu.spl.mics.application.myClasses;
+package bgu.spl.mics.application.special;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;

@@ -1,7 +1,5 @@
 package bgu.spl.mics;
 
-import bgu.spl.mics.application.passiveObjects.Squad;
-
 import java.util.Map;
 import java.util.concurrent.*;
 
@@ -26,13 +24,11 @@ public class MessageBrokerImpl implements MessageBroker {
     public static class MessageBrokerHolder {
         private static MessageBrokerImpl instance = new MessageBrokerImpl();
     }
-
     private MessageBrokerImpl() {
         eventFutureMap = new ConcurrentHashMap<>();
         subscriberRegisterMap = new ConcurrentHashMap<>();
         MessageSupPubMap = new ConcurrentHashMap<>();
     }
-
     public static MessageBrokerImpl getInstance() {
         return MessageBrokerHolder.instance;
     }
@@ -60,25 +56,17 @@ public class MessageBrokerImpl implements MessageBroker {
 
     @Override
     public void sendBroadcast(Broadcast b) {
-        LinkedBlockingQueue<Subscriber> queueSubs = getTopicSubs(b);
+        LinkedBlockingQueue<Subscriber> queueSubs = MessageSupPubMap.get(b.getClass());
         if (queueSubs == null)
             return;
         for (Subscriber sub : queueSubs) {
-            BlockingQueue<Message> registerQ = getSubQueue(sub);
+            BlockingQueue<Message> registerQ = subscriberRegisterMap.get(sub);
             try {
                 registerQ.add(b);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    private BlockingQueue<Message> getSubQueue(Subscriber sub) {
-        return subscriberRegisterMap.get(sub);
-    }
-
-    private LinkedBlockingQueue<Subscriber> getTopicSubs(Broadcast b) {
-        return MessageSupPubMap.get(b.getClass());
     }
 
 
@@ -99,8 +87,6 @@ public class MessageBrokerImpl implements MessageBroker {
             return send;
         }
     }
-
-
 
     @Override
     public void register(Subscriber m) {
@@ -127,12 +113,6 @@ public class MessageBrokerImpl implements MessageBroker {
     public Message awaitMessage(Subscriber m) throws InterruptedException {
         BlockingQueue<Message> Q = subscriberRegisterMap.get(m);
         return Q.take();
-    }
-
-    public void whenTerminateCompleteAll() {
-        for (Map.Entry<Event, Future> iter : eventFutureMap.entrySet()) {
-            iter.getValue().resolve(null);
-        }
     }
 
 }

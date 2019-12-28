@@ -16,17 +16,12 @@ public class Future<T> {
 	private T result;
 
 
-	public T getResult() {
-		return result;
-	}
-
 	/**
 	 * This should be the the only public constructor in this class.
 	 */
 	public Future() {
 		done = false;
 		result = null;
-
 	}
 	
 	/**
@@ -90,7 +85,5 @@ public class Future<T> {
 			}
 		}
 		return result;
-
-
 	}
 }

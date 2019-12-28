@@ -1,6 +1,6 @@
 package bgu.spl.mics.application;
 
-import bgu.spl.mics.application.myClasses.LoadLatch;
+import bgu.spl.mics.application.special.LoadLatch;
 import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.application.publishers.TimeService;
 import bgu.spl.mics.application.subscribers.Intelligence;
@@ -23,7 +23,7 @@ import java.util.List;
 public class MI6Runner {
 
     public static void main(String[] args) {
-        String path = "SPL201test2.json";
+        String path = "SPL201test1.json";
         List<Thread> fredList = new ArrayList<>();
         try {
             BufferedReader Yoram = new BufferedReader(new FileReader(path));
