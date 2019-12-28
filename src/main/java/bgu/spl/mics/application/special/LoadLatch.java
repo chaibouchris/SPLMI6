@@ -7,7 +7,7 @@ import java.util.concurrent.CountDownLatch;
  * this class was made for make sure that we start the TimeService after all the other threads
  * are ready to start the missions.
  * the fields contains list of threads that include all the subscribers, the thread of the TimeService
- * and a countdownlatch that we use for that.
+ * and a Countdown-latch that we use for that.
  */
 public class LoadLatch {
     private List<Thread> threadList;
