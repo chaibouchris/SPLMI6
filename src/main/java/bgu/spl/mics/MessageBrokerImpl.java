@@ -81,6 +81,7 @@ public class MessageBrokerImpl implements MessageBroker {
             Subscriber sub = queueSubs.poll();
             if (sub != null) {
                 BlockingQueue<Message> Qregister = subscriberRegisterMap.get(sub);
+                if (Qregister != null)
                 Qregister.add(e);
                 queueSubs.add(sub);
             }

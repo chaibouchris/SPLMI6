@@ -23,7 +23,7 @@ import java.util.List;
 public class MI6Runner {
 
     public static void main(String[] args) {
-        String path = "SPL201test1.json";
+        String path = "tamirJson1.json";
         List<Thread> fredList = new ArrayList<>();
         try {
             BufferedReader Yoram = new BufferedReader(new FileReader(path));
