@@ -71,6 +71,7 @@ public class Diary {
 		}
 	}
 
+
 	/**
 	 * Gets the total number of received missions (executed / aborted) be all the M-instances.
 	 * @return the total number of received missions (executed / aborted) be all the M-instances.

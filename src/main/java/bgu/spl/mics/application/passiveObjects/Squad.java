@@ -17,6 +17,7 @@ public class Squad {
 
 	private Map<String, Agent> agents;
 
+
 	/**
 	 * Retrieves the single instance of this class.
 	 */

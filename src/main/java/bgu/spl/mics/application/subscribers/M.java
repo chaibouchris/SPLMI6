@@ -44,7 +44,7 @@ public class M extends Subscriber {
 			Future<AgentsAvialableResult> future = getSimplePublisher().sendEvent(AAE);
 			System.out.println(Thread.currentThread().getName()+" send agentAvialable");
 
-			long timeOut = (E.getExpiredTime() - currTick)*100;
+			long timeOut = (E.getExpiredTime() - currTick + 1)*100;
 			AgentsAvialableResult AAR = future.get(timeOut , TimeUnit.MILLISECONDS);
 			Future MgetGadget;
 

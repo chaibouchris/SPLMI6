@@ -1,16 +1,18 @@
 package bgu.spl.mics.application.subscribers;
 
 import bgu.spl.mics.Future;
-import bgu.spl.mics.MessageBrokerImpl;
 import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.AgentsAvailableEvent;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.myClasses.AgentsAvialableResult;
+import bgu.spl.mics.application.passiveObjects.Agent;
 import bgu.spl.mics.application.passiveObjects.Squad;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,12 +27,13 @@ public class Moneypenny extends Subscriber {
 	private Squad saqi;
 	private int id;
 	private int currTick;
-
+	private List<String> ser;
 	public Moneypenny(int id) {
 		super("MoneyPenny");
 		saqi = Squad.getInstance();
 		this.id = id;
 		this.currTick = 0;
+		ser=new LinkedList<>();
 	}
 
 	@Override
@@ -44,6 +47,7 @@ public class Moneypenny extends Subscriber {
 		subscribeEvent(AgentsAvailableEvent.class, (E) -> {
 			int timeExpired = E.getTimeExpired();
 			List<String> serials = E.getSerials();
+			ser.addAll(serials);
 			Boolean getAgents = saqi.getAgents(serials);
 			List<String> agentsNames = new ArrayList<>();
 			if (getAgents){
@@ -52,7 +56,7 @@ public class Moneypenny extends Subscriber {
 			Future<Boolean> gadgetFuture = new Future<>();
 			AgentsAvialableResult AAR = new AgentsAvialableResult(this.id, getAgents, agentsNames, gadgetFuture);
 			complete(E, AAR);
-			Boolean gotGadget = gadgetFuture.get((timeExpired - currTick)*100, TimeUnit.MILLISECONDS);
+			Boolean gotGadget = gadgetFuture.get((timeExpired - currTick+1)*100, TimeUnit.MILLISECONDS);
 
 			if (gotGadget != null && gotGadget && getAgents){
 				saqi.sendAgents(serials, E.getDuration());
@@ -64,6 +68,7 @@ public class Moneypenny extends Subscriber {
 	private void subscribeTerminateBrod() {
 		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
 			whenTerminateCompleteAll();
+			saqi.releaseAgents(ser);
 			terminate();
 			System.out.println(this.getName()+id+"unregister");
 		});
