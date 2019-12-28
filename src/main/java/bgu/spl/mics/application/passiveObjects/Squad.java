@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Squad {
 
 	private Map<String, Agent> agents;
-	private AtomicBoolean notTerminate = new AtomicBoolean(true);
 
 	/**
 	 * Retrieves the single instance of this class.
@@ -64,6 +63,7 @@ public class Squad {
 	 */
 	public void sendAgents(List<String> serials, int time){
 		try {
+			System.out.println("we send him!");
 			Thread.sleep(100*time);
 		} catch (InterruptedException e) {
 			e.printStackTrace();

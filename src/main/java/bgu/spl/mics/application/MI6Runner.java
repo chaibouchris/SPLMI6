@@ -15,7 +15,6 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 /** This is the Main class of the application. You should parse the input file,
  * create the different instances of the objects, and run the system.
@@ -24,7 +23,7 @@ import java.util.concurrent.CountDownLatch;
 public class MI6Runner {
 
     public static void main(String[] args) {
-        String path = "SPL201test2.json";
+        String path = "boaz-input2.json";
         List<Thread> fredList = new ArrayList<>();
         try {
             BufferedReader Yoram = new BufferedReader(new FileReader(path));

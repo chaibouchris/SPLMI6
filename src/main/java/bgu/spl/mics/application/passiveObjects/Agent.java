@@ -84,9 +84,9 @@ public class Agent {
      * Releases an agent.
      */
     public void release() {
-		lock1.release();
         if (!isAvailable()) {
             isAvailable.set(true);
         }
+        lock1.release();
     }
 }

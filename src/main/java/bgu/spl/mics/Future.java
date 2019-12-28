@@ -53,9 +53,10 @@ public class Future<T> {
 	/**
      * Resolves the result of this Future object.
      */
-	public void resolve (T result) {
+	public synchronized void resolve (T result) {
 		this.result = result;
 		this.done = true;
+		notifyAll();
 	}
 	
 	/**
@@ -76,26 +77,18 @@ public class Future<T> {
      * 	       wait for {@code timeout} TimeUnits {@code unit}. If time has
      *         elapsed, return null.
      */
-	public T get(long timeout, TimeUnit unit) {
-		synchronized (this) {
-			if (done) {
-				return result;
-			} else {
-				long time = unit.toMillis(timeout);
-				while (!done) {
-					try {
-						wait(time);
-						if (!done) {
-							return null;
-						}
-					} catch (InterruptedException e) {
-						Thread.currentThread().interrupt();
-						System.out.println("Thread interrupt");
-					}
-				}
-				return result;
+	public synchronized T get(long timeout, TimeUnit unit) {
+		long time = unit.toMillis(timeout);
+		if (!done) {
+			try {
+				wait(time);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				System.out.println("Thread interrupt");
 			}
 		}
-	}
+		return result;
 
+
+	}
 }

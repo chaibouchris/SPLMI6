@@ -35,7 +35,7 @@ public class TimeService extends Publisher {
 
 	@Override
 	public void run() {
-		while (currTick < duration){
+		while (currTick <= duration){
 			TickBroadcast TB = new TickBroadcast(currTick);
 			getSimplePublisher().sendBroadcast(TB);
 			try {
