@@ -1,6 +1,6 @@
 package bgu.spl.mics.application;
 
-import bgu.spl.mics.application.special.LoadLatch;
+import bgu.spl.mics.application.others.LoadLatch;
 import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.application.publishers.TimeService;
 import bgu.spl.mics.application.subscribers.Intelligence;

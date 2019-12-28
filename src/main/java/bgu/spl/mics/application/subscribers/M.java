@@ -3,7 +3,7 @@ package bgu.spl.mics.application.subscribers;
 import bgu.spl.mics.Future;
 import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.*;
-import bgu.spl.mics.application.special.AgentsAvailableResult;
+import bgu.spl.mics.application.others.AgentsAvailableResult;
 import bgu.spl.mics.application.passiveObjects.Diary;
 import bgu.spl.mics.application.passiveObjects.Report;
 

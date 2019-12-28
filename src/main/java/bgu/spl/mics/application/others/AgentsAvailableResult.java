@@ -1,4 +1,4 @@
-package bgu.spl.mics.application.special;
+package bgu.spl.mics.application.others;
 
 import bgu.spl.mics.Future;
 

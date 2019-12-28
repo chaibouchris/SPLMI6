@@ -2,7 +2,7 @@ package bgu.spl.mics;
 
 import java.util.HashMap;
 
-import static bgu.spl.mics.application.special.LoadLatch.CountdownLatch;
+import static bgu.spl.mics.application.others.LoadLatch.CountdownLatch;
 
 /**
  * The Subscriber is an abstract class that any subscriber in the system

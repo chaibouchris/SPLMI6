@@ -13,14 +13,14 @@ public class Agent {
     private String SerialNumber;
     private String Name;
     private AtomicBoolean isAvailable;
-    private Semaphore lock1;
+    private Semaphore Sami;
 
 
     public Agent(String name, String serialNumber) {
         this.Name = name;
         this.SerialNumber = serialNumber;
         isAvailable = new AtomicBoolean(true);
-        lock1 = new Semaphore(1, true);
+        Sami = new Semaphore(1, true);
     }
 
     /**
@@ -72,7 +72,7 @@ public class Agent {
      */
     public void acquire() {
         try {
-            lock1.acquire();
+            Sami.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -87,6 +87,6 @@ public class Agent {
         if (!isAvailable()) {
             isAvailable.set(true);
         }
-        lock1.release();
+        Sami.release();
     }
 }

@@ -5,7 +5,7 @@ import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.AgentsAvailableEvent;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
-import bgu.spl.mics.application.special.AgentsAvailableResult;
+import bgu.spl.mics.application.others.AgentsAvailableResult;
 import bgu.spl.mics.application.passiveObjects.Squad;
 
 import java.util.ArrayList;
