@@ -61,11 +61,8 @@ public class MessageBrokerImpl implements MessageBroker {
             return;
         for (Subscriber sub : queueSubs) {
             BlockingQueue<Message> registerQ = subscriberRegisterMap.get(sub);
-            try {
+                if (registerQ != null)
                 registerQ.add(b);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 

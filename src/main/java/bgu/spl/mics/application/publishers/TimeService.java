@@ -43,7 +43,6 @@ public class TimeService extends Publisher {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			System.out.println(currTick);
 			currTick++;
 		}//when finish the ticks we send broadcast to terminate
 		TerminateBroadcast finito = new TerminateBroadcast();

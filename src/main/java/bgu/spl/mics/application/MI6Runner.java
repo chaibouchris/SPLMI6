@@ -23,6 +23,7 @@ import java.util.List;
 public class MI6Runner {
 
     public static void main(String[] args) {
+        //String path = args[0];
         String path = "tamirJson1.json";
         List<Thread> fredList = new ArrayList<>();
         try {
