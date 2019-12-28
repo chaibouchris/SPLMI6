@@ -72,8 +72,8 @@ public class Inventory {
 	 */
 	public void printToFile(String filename){
 		Gson gisi = new Gson();
-		try (FileWriter amos = new FileWriter(filename)){
-			gisi.toJson(gadgets,amos);
+		try (FileWriter branuTegene = new FileWriter(filename)){
+			gisi.toJson(gadgets,branuTegene);
 		} catch (IOException e) {
 			System.out.println("illegal filename");
 		}

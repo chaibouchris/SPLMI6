@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
+
 
 /**
  * Passive data-object representing a information about an agent in MI6.
@@ -17,11 +17,9 @@ public class Squad {
 
 	private Map<String, Agent> agents;
 
-
 	/**
 	 * Retrieves the single instance of this class.
 	 */
-
 
 	public static class SquadHolder {
 		private static Squad instance = new Squad();
@@ -50,7 +48,7 @@ public class Squad {
 	 * Releases agents.
 	 */
 	public void releaseAgents(List<String> serials){
-		Collections.sort(serials);
+		Collections.sort(serials);//sort the serials
 		for (String x:serials) {
 			if(this.agents.containsKey(x)){
 				agents.get(x).release();
@@ -64,7 +62,6 @@ public class Squad {
 	 */
 	public void sendAgents(List<String> serials, int time){
 		try {
-			System.out.println("we send him!");
 			Thread.sleep(100*time);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -78,19 +75,18 @@ public class Squad {
 	 * @return ‘false’ if an agent of serialNumber ‘serial’ is missing, and ‘true’ otherwise
 	 */
 	public boolean getAgents(List<String> serials){
-		Collections.sort(serials);
+		Collections.sort(serials);//sort the list
 		boolean everybodyHere = true;// if some one is missing then i want to acqurie everbody else and return true.
 		for (String x: serials) {
 			everybodyHere = this.agents.containsKey(x);
 			if (!everybodyHere)
-				break;
+				break;//not contain this one
 		}
 		if (everybodyHere) {
 			for (String x : serials) {
 				agents.get(x).acquire();
 			}
 		}
-
 		return everybodyHere;
 	}
 
