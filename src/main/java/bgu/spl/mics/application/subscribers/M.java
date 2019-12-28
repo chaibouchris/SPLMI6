@@ -47,7 +47,6 @@ public class M extends Subscriber {
 			Future futureMgotTheGadget;
 			if (AAR != null && AAR.weGotTheAgents()) {//enter if we get the agents
 				GadgetAvailableEvent GAE = new GadgetAvailableEvent(E.getGadget(), currTick);
-				System.out.println("M send event");
 				Future<Integer> gadgetFuture = getSimplePublisher().sendEvent(GAE);//send gadget available event
 				Integer foundGadget = gadgetFuture.get((expiredTime - currTick + 1)*100 , TimeUnit.MILLISECONDS);
 				complete(GAE, foundGadget);//the event with the result that give the time we got the gadget/-1 if we dont get it

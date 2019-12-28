@@ -30,7 +30,6 @@ public class LoadLatch {
     public void start(){
         for (Thread thread: threadList){
             thread.start();
-            System.out.println(thread.getName()+" start");
         }
         try {
             latchi.await();//wait until countdown get to 0
@@ -39,7 +38,6 @@ public class LoadLatch {
         }
 
         timeService.start();
-        System.out.println("timeService start");
     }
 
     /**
