@@ -23,29 +23,28 @@ import java.util.List;
 public class MI6Runner {
 
     public static void main(String[] args) {
-        //String path = args[0];
-        String path = "tamirJson1.json";
+        String path = args[0];
         List<Thread> fredList = new ArrayList<>();
         try {
             BufferedReader Yoram = new BufferedReader(new FileReader(path));
             Gson Goku = new Gson();
             JsonObject Derulo = Goku.fromJson(Yoram, JsonObject.class);
-            LetTheShowtimeBegin(Derulo, fredList);
+            LetTheShowtimeBegin(Derulo, fredList, args);
         } catch (FileNotFoundException e) {
             System.out.println("file not found");
         }
     }
 
-    private static void LetTheShowtimeBegin(JsonObject JJ, List<Thread> threadList){
+    private static void LetTheShowtimeBegin(JsonObject JJ, List<Thread> threadList, String[] args){
         JsonArray inventory = JJ.getAsJsonArray("inventory");
         JsonArray squad = JJ.getAsJsonArray("squad");
         JsonObject services = JJ.getAsJsonObject("services");
         Inventory.getInstance().load(inventoryToString(inventory));
         Squad.getInstance().load(agentToArray(squad));
-        showMustGoOn(services, threadList);
+        showMustGoOn(services, threadList, args);
     }
 
-    private static void showMustGoOn(JsonObject services, List<Thread> threadList) {
+    private static void showMustGoOn(JsonObject services, List<Thread> threadList, String[] args) {
         loadM(services, threadList);
         LoadMoneypenny(services, threadList);
         LoadQ(threadList);
@@ -63,8 +62,8 @@ public class MI6Runner {
                 e.printStackTrace();
             }
         }
-        Inventory.getInstance().printToFile("inventory.json");
-        Diary.getInstance().printToFile("diary.json");
+        Inventory.getInstance().printToFile(args[1]);
+        Diary.getInstance().printToFile(args[2]);
     }
 
     private static Thread LoadTimeService(JsonObject services) {
