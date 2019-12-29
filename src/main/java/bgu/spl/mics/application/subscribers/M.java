@@ -83,7 +83,7 @@ public class M extends Subscriber {
 
 	private void writeReport(List<String> serials, int timeIssued, List<String> agentsName, int qtime, int MpID, String gadget, String nameOfmission){
 		Report toAdd = new Report();
-		toAdd.setQTime(qtime);
+		toAdd.setQtime(qtime);
 		toAdd.setAgentsNames(agentsName);
 		toAdd.setTimeIssued(timeIssued);
 		toAdd.setGadgetName(gadget);
