@@ -12,10 +12,19 @@ public class MissionInfo {
 
 	private String name;
 	private List<String> serialAgentNum;
-	String gadget;
-	int timeIssued;
-	int timeExpired;
-	int duration;
+	private String gadget;
+	private int timeIssued;
+	private int timeExpired;
+	private int duration;
+
+	public MissionInfo(String name, List<String> serialAgentNum, String gadget, int timeIssued, int timeExpired, int duration){
+		this.name = name;
+		this.serialAgentNum = serialAgentNum;
+		this. gadget = gadget;
+		this.timeIssued = timeIssued;
+		this.timeExpired = timeExpired;
+		this.duration = duration;
+	}
 
     /**
      * Sets the name of the mission.

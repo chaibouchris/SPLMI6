@@ -1,11 +1,9 @@
 package bgu.spl.mics.application.subscribers;
 
-import bgu.spl.mics.MessageBrokerImpl;
 import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.GadgetAvailableEvent;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
-import bgu.spl.mics.application.passiveObjects.GadgetAvialableResult;
 import bgu.spl.mics.application.passiveObjects.Inventory;
 
 /**
@@ -28,20 +26,31 @@ public class Q extends Subscriber {
 
 	@Override
 	protected void initialize() {
-		MessageBrokerImpl.getInstance().register(this);
+		subscribeBrod();//subscribe himself for the broadcasts
+		subscribeTerminateBrod();//subscribe himself for the terminate broadcast
+		subscribeGadgetAvailableEvent();// subscribe himself for the gadget avialable event
+	}
 
-		subscribeBroadcast(TickBroadcast.class, (B) ->{
-			setCurrTick(B.getTick());
+	private void subscribeGadgetAvailableEvent() {
+		subscribeEvent(GadgetAvailableEvent.class, (E) -> {
+			boolean booli = invi.getItem(E.getGadget());
+			if (booli){
+				complete(E, currTick);//with the time he get it
+			} else{
+				complete(E, -1);//with -1 if not get it
+			}
 		});
+	}
 
+	private void subscribeTerminateBrod() {
 		subscribeBroadcast(TerminateBroadcast.class, (TB) ->{
-			MessageBrokerImpl.getInstance().unregister(this);
 			terminate();
 		});
+	}
 
-		subscribeEvent(GadgetAvailableEvent.class, (E) -> {
-			GadgetAvialableResult GAR = new GadgetAvialableResult(invi.getItem(E.getGadget()), currTick);
-			complete(E, GAR);
+	private void subscribeBrod() {
+		subscribeBroadcast(TickBroadcast.class, (B) ->{
+			setCurrTick(B.getTick());
 		});
 	}
 

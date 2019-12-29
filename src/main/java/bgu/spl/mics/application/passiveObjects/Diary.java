@@ -1,10 +1,13 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,9 +41,6 @@ public class Diary {
 		return DiaryHolder.instance;
 	}
 
-	public List<Report> getReports() {
-		return reports;
-	}
 
 	/**
 	 * adds a report to the diary
@@ -60,14 +60,15 @@ public class Diary {
 	 * This method is called by the main method in order to generate the output.
 	 */
 	public void printToFile(String filename){
-		String output = reports.toString();
-		Gson gisi = new Gson();
-		try {
-			gisi.toJson(output, new FileWriter(filename));
+		Gson gisi = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).setPrettyPrinting().create();
+		String output = gisi.toJson(Diary.getInstance());
+		try (FileWriter amosOz = new FileWriter(filename)) {
+			amosOz.write(output);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+
 
 	/**
 	 * Gets the total number of received missions (executed / aborted) be all the M-instances.
@@ -77,6 +78,9 @@ public class Diary {
 		return total.get();
 	}
 
+	/**
+	 * increase the total number of received missions (executed / aborted).
+	 */
 	public void incrementTotal(){
 		this.total.incrementAndGet();
 	}

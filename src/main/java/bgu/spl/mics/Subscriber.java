@@ -2,6 +2,8 @@ package bgu.spl.mics;
 
 import java.util.HashMap;
 
+import static bgu.spl.mics.application.others.LoadLatch.CountdownLatch;
+
 /**
  * The Subscriber is an abstract class that any subscriber in the system
  * must extend. The abstract Subscriber class is responsible to get and
@@ -21,7 +23,7 @@ public abstract class Subscriber extends RunnableSubPub {
 
     private boolean terminated = false;
     private HashMap<Class<? extends Message>,Callback> callbackHashMap;
-    private MessageBrokerImpl bejerano;
+    private MessageBrokerImpl drBajureanu;
 
     /**
      * @param name the Subscriber name (used mainly for debugging purposes -
@@ -30,7 +32,7 @@ public abstract class Subscriber extends RunnableSubPub {
     public Subscriber(String name) {
         super(name);
         callbackHashMap = new HashMap<>();
-        bejerano = MessageBrokerImpl.getInstance();
+        drBajureanu = MessageBrokerImpl.getInstance();
     }
 
     /**
@@ -55,7 +57,7 @@ public abstract class Subscriber extends RunnableSubPub {
      *                 queue.
      */
     protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
-       bejerano.subscribeEvent(type,this);
+       drBajureanu.subscribeEvent(type,this);
        callbackHashMap.put(type,callback);
     }
 
@@ -80,7 +82,7 @@ public abstract class Subscriber extends RunnableSubPub {
      *                 queue.
      */
     protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
-       bejerano.subscribeBroadcast(type,this);
+       drBajureanu.subscribeBroadcast(type,this);
        callbackHashMap.put(type,callback);
     }
 
@@ -95,7 +97,7 @@ public abstract class Subscriber extends RunnableSubPub {
      *               {@code e}.
      */
     protected final <T> void complete(Event<T> e, T result) {
-        bejerano.complete(e,result);
+        drBajureanu.complete(e,result);
     }
 
     /**
@@ -107,23 +109,24 @@ public abstract class Subscriber extends RunnableSubPub {
     }
 
     /**
-     * The entry point of the Subscriber. TODO: you must complete this code
+     * The entry point of the Subscriber.
      * otherwise you will end up in an infinite loop.
      */
     @Override
     public final void run() {
         initialize();
-        bejerano.register(this);
+        CountdownLatch();
+        drBajureanu.register(this);
         while (!terminated) {
             try {
-                Message myLovelyMission = bejerano.awaitMessage(this);// take mission
+                Message myLovelyMission = drBajureanu.awaitMessage(this);// take mission
                 callbackHashMap.get(myLovelyMission.getClass()).call(myLovelyMission);// do callback.
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                System.out.println(this.getName()+" interrupted");
             }
-
         }
-        bejerano.unregister(this);
+        drBajureanu.unregister(this);
     }
 
 }

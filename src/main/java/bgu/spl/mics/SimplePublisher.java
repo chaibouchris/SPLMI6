@@ -10,7 +10,7 @@ package bgu.spl.mics;
  * <p>
  */
 public final class SimplePublisher {
-    MessageBrokerImpl bejerano = MessageBrokerImpl.getInstance();
+    MessageBrokerImpl drBajureanu = MessageBrokerImpl.getInstance();
     /**
      * Sends the event {@code e} using the MessageBroker and receive a {@link Future<T>}
      * object that may be resolved to hold a result. This method must be Non-Blocking since
@@ -24,7 +24,7 @@ public final class SimplePublisher {
      * 	       			null in case no Subscriber has subscribed to {@code e.getClass()}.
      */
     public final <T> Future<T> sendEvent(Event<T> e) {
-      return bejerano.sendEvent(e);
+      return drBajureanu.sendEvent(e);
 
     }
 
@@ -35,6 +35,6 @@ public final class SimplePublisher {
      * @param b The broadcast message to send
      */
     public final void sendBroadcast(Broadcast b) {
-       bejerano.sendBroadcast(b);
+       drBajureanu.sendBroadcast(b);
     }
 }
