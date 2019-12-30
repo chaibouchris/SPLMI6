@@ -23,7 +23,7 @@ import java.util.List;
 public class MI6Runner {
 
     public static void main(String[] args) {
-        String path = "SPL201test1.json";
+        String path = args[0];
         List<Thread> fredList = new ArrayList<>();
         try {
             BufferedReader Yoram = new BufferedReader(new FileReader(path));
@@ -62,8 +62,8 @@ public class MI6Runner {
                 e.printStackTrace();
             }
         }
-        Inventory.getInstance().printToFile("args[1]");
-        Diary.getInstance().printToFile("args[2]");
+        Inventory.getInstance().printToFile(args[1]);
+        Diary.getInstance().printToFile(args[2]);
     }
 
     private static Thread LoadTimeService(JsonObject services) {
